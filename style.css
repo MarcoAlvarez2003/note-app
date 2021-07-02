@@ -153,6 +153,11 @@ body {
     padding: 10px;
 }
 
+.form__input--date {
+    width: 32%;
+    padding: 10px;
+}
+
 .form__input--dark,
 .form__area--dark {
     color: #bbb;

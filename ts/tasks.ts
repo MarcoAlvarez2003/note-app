@@ -61,17 +61,26 @@ namespace Task {
 
     export const save = () => localStorage.setItem("TaskStore", JSON.stringify(tasks));
 
+    export const createTask = () => {
+        create({
+            name: Formulary.name.value,
+            description: Formulary.description.value,
+            date: [
+                Formulary.year.value,
+                Formulary.parseDate(Formulary.month.value),
+                Formulary.parseDate(Formulary.day.value),
+            ],
+        });
+    };
+
     Formulary.form.addEventListener("click", (e) => {
         e.preventDefault();
         const action = (e.target as HTMLElement).dataset.action as Actions;
-        action
-            ? action === "create"
-                ? create({
-                      name: Formulary.name.value,
-                      description: Formulary.description.value,
-                      date: Formulary.date.value.split("-") as DateArray,
-                  })
-                : close()
-            : false;
+        if (action) {
+            if (action === "create") {
+                if (Formulary.isValidForm()) createTask();
+                else alert("Invalid Task");
+            } else close();
+        }
     });
 }

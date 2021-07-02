@@ -4,16 +4,20 @@ var Formulary;
     Formulary.form = document.getElementById("form");
     Formulary.modal = document.getElementById("form-modal");
     Formulary.name = document.getElementById("name");
-    Formulary.date = document.getElementById("date");
     Formulary.listNames = document.getElementById("task-names");
     Formulary.description = document.getElementById("description");
-    var resetDate = function () {
-        var _date = new Date();
-        Formulary.date.value = Formulary.date.min = _date.getFullYear() + "-" + (_date.getMonth() + 1)
-            .toString()
-            .padStart(2, "0") + "-" + (_date.getDate() + 1).toString().padStart(2, "0");
+    Formulary.day = document.getElementById("day");
+    Formulary.year = document.getElementById("year");
+    Formulary.month = document.getElementById("month");
+    var resetDateInfo = function () {
+        var date = new Date();
+        Formulary.year.value = date.getFullYear().toString();
+        Formulary.day.value = date.getDate().toString().padStart(2, "0");
+        Formulary.month.value = (date.getMonth() + 1).toString().padStart(2, "0");
     };
-    resetDate();
+    Formulary.parseDate = function (date) { return date.padStart(2, "0"); };
+    Formulary.isValidForm = function () { return !!Formulary.name.value && !!Formulary.description.value; };
+    resetDateInfo();
 })(Formulary || (Formulary = {}));
 var Task;
 (function (Task) {
@@ -51,18 +55,30 @@ var Task;
         Task.save();
     };
     Task.save = function () { return localStorage.setItem("TaskStore", JSON.stringify(Task.tasks)); };
+    Task.createTask = function () {
+        create({
+            name: Formulary.name.value,
+            description: Formulary.description.value,
+            date: [
+                Formulary.year.value,
+                Formulary.parseDate(Formulary.month.value),
+                Formulary.parseDate(Formulary.day.value),
+            ],
+        });
+    };
     Formulary.form.addEventListener("click", function (e) {
         e.preventDefault();
         var action = e.target.dataset.action;
-        action
-            ? action === "create"
-                ? create({
-                    name: Formulary.name.value,
-                    description: Formulary.description.value,
-                    date: Formulary.date.value.split("-"),
-                })
-                : close()
-            : false;
+        if (action) {
+            if (action === "create") {
+                if (Formulary.isValidForm())
+                    Task.createTask();
+                else
+                    alert("Invalid Task");
+            }
+            else
+                close();
+        }
     });
 })(Task || (Task = {}));
 var Modal;
