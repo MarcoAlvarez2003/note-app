@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="style.css" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Task Manager</title>
+    </head>
+    <body>
+        <!-- Modals -->
+
+        <!-- Form -->
+        <div class="modal hide" id="form-modal">
+            <form class="form" id="form">
+                <div class="form__block">
+                    <input
+                        id="name"
+                        type="text"
+                        list="task-names"
+                        autocomplete="off"
+                        class="form__input form__input--dark"
+                        placeholder="Write name for this task"
+                    />
+                </div>
+
+                <div class="form__block">
+                    <textarea
+                        id="description"
+                        class="form__area form__area--dark"
+                        placeholder="Write instructions for this task"
+                    ></textarea>
+                </div>
+
+                <div class="form__block form__block--flex">
+                    <input type="date" class="form__input form__input--dark" id="date" />
+                </div>
+
+                <div class="form__block form__block--flex">
+                    <button
+                        type="button"
+                        class="form__button form__button--dark"
+                        data-action="create"
+                    >
+                        Create
+                    </button>
+                    <button
+                        type="button"
+                        class="form__button form__button--dark"
+                        data-action="close"
+                    >
+                        Close
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Showbox -->
+        <div class="modal hide" id="modal">
+            <div class="showbox">
+                <div class="showbox__head">
+                    <span class="showbox__title" data-key="" id="showbox-title"> Titulo </span>
+                </div>
+                <div class="showbox__body">
+                    <p class="showbox__paragraph" id="showbox-content">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam quisquam
+                        neque expedita nam, eaque delectus omnis accusamus beatae aspernatur iste
+                        distinctio ipsam officia vero in voluptas possimus minus! Cumque, adipisci.
+                    </p>
+                </div>
+                <div class="showbox__controlbox">
+                    <button class="form__button form__button--dark" id="remove">Remove</button>
+                    <button class="form__button form__button--dark" id="close-modal">Back</button>
+                </div>
+            </div>
+        </div>
+
+        <datalist id="task-names"> </datalist>
+
+        <!-- App -->
+        <div id="app" class="app">
+            <header class="app__head">
+                <h1 class="app__title">Task Manager</h1>
+            </header>
+            <main id="container" class="app__body">
+                <div class="block" id="toggle">
+                    <div class="box-logo">
+                        <div class="logo">&plus;</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <script src="bundle.js"></script>
+    </body>
+</html>
