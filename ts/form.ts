@@ -10,7 +10,7 @@ namespace Formulary {
     export const year = document.getElementById("year") as HTMLInputElement;
     export const month = document.getElementById("month") as HTMLInputElement;
 
-    const resetDateInfo = () => {
+    export const restartTimeData = () => {
         const date = new Date();
         year.value = date.getFullYear().toString();
         day.value = date.getDate().toString().padStart(2, "0");
@@ -21,5 +21,5 @@ namespace Formulary {
 
     export const isValidForm = () => !!name.value && !!description.value;
 
-    resetDateInfo();
+    restartTimeData();
 }

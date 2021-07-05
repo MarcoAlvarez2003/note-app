@@ -9,7 +9,7 @@ var Formulary;
     Formulary.day = document.getElementById("day");
     Formulary.year = document.getElementById("year");
     Formulary.month = document.getElementById("month");
-    var resetDateInfo = function () {
+    Formulary.restartTimeData = function () {
         var date = new Date();
         Formulary.year.value = date.getFullYear().toString();
         Formulary.day.value = date.getDate().toString().padStart(2, "0");
@@ -17,7 +17,7 @@ var Formulary;
     };
     Formulary.parseDate = function (date) { return date.padStart(2, "0"); };
     Formulary.isValidForm = function () { return !!Formulary.name.value && !!Formulary.description.value; };
-    resetDateInfo();
+    Formulary.restartTimeData();
 })(Formulary || (Formulary = {}));
 var Task;
 (function (Task) {
