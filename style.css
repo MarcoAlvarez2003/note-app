@@ -67,8 +67,7 @@ body {
     padding: 5px;
     text-align: center;
     background-color: #1119;
-    border-bottom: 2px solid #fff;
-    animation: AppHeadBorder 2s infinite;
+    border-bottom: 2px solid rgb(79, 1, 223);
 }
 
 .task__body {
@@ -154,7 +153,7 @@ body {
 }
 
 .form__input--date {
-    width: 32%;
+    width: 24.5%;
     padding: 10px;
 }
 

@@ -12,22 +12,22 @@ toggle.addEventListener("click", () => {
     Formulary.modal.classList.remove("hide");
 });
 
-const createTask = ({ name, description, date }: Task.TaskObject) => {
+const createTask = (taskObject: Task.TaskObject) => {
     const block = document.createElement("div");
-    const task = Task.builder({ name, description, date });
+    const task = Task.builder(taskObject);
 
     block.classList.add("block");
     block.appendChild(task);
 
-    block.id = name;
+    block.id = taskObject.name;
 
     block.addEventListener("click", () => {
         Modal.modal.classList.remove("hide");
-
-        Modal.name.textContent = name;
-        Modal.name.dataset.key = name;
-        Modal.description.textContent = description;
+        Modal.name.textContent = taskObject.name;
+        Modal.name.dataset.key = taskObject.name;
+        Modal.description.textContent = taskObject.description;
     });
+
     return block;
 };
 
@@ -60,10 +60,10 @@ Modal.close.addEventListener("click", () => {
     Modal.description.textContent = "";
 });
 
-Task.onCreateTask = ({ name, description, date }) => {
-    container.appendChild(createTask({ name, description, date }));
-    Formulary.listNames.appendChild(createOption({ name, description, date }));
+Task.onCreateTask = (task) => {
+    container.appendChild(createTask(task));
+    Formulary.namesNode.appendChild(createOption(task));
 };
 
 container.appendChild(fragment);
-Formulary.listNames.appendChild(optionFragment);
+Formulary.namesNode.appendChild(optionFragment);

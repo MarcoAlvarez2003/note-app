@@ -3,11 +3,10 @@
 namespace Task {
     export interface TaskObject {
         name: string;
-        date: DateArray;
+        date: string;
+        color: string;
         description: string;
     }
-
-    type DateArray = [year: string, month: string, day: string];
 
     type Actions = "create" | "close";
 
@@ -15,9 +14,9 @@ namespace Task {
 
     export let onCreateTask = ({ name, description, date }: TaskObject) => {};
 
-    const create = ({ name, description, date }: TaskObject) => {
-        tasks.push({ name, description, date });
-        onCreateTask({ name, description, date });
+    const create = (task: TaskObject) => {
+        tasks.push(task);
+        onCreateTask(task);
         close();
         save();
     };
@@ -27,7 +26,7 @@ namespace Task {
         Formulary.form.reset();
     };
 
-    export const builder = ({ name, description, date }: TaskObject) => {
+    export const builder = ({ name, description, date, color }: TaskObject) => {
         const task = document.createElement("div");
         const taskHead = document.createElement("div");
         const taskBody = document.createElement("div");
@@ -40,7 +39,7 @@ namespace Task {
         ${name} -
             <small>
                 <i>
-                    ${date.join(" / ")}
+                    ${date}
                 </i>
             </small>
         `;
@@ -48,6 +47,10 @@ namespace Task {
 
         task.appendChild(taskHead);
         task.appendChild(taskBody);
+        task.style.borderColor = color;
+        taskHead.style.borderBottomColor = color;
+        task.style.boxShadow = `0 0 10px ${color}`;
+
         return task;
     };
 
@@ -64,12 +67,9 @@ namespace Task {
     export const createTask = () => {
         create({
             name: Formulary.name.value,
+            color: Formulary.color.value,
+            date: Formulary.getDateData(),
             description: Formulary.description.value,
-            date: [
-                Formulary.year.value,
-                Formulary.parseDate(Formulary.month.value),
-                Formulary.parseDate(Formulary.day.value),
-            ],
         });
     };
 

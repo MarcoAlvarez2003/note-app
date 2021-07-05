@@ -1,25 +1,42 @@
 namespace Formulary {
+    // ? Nodes
     export const form = document.getElementById("form") as HTMLFormElement;
     export const modal = document.getElementById("form-modal") as HTMLDivElement;
+    export const namesNode = document.getElementById("task-names") as HTMLDataListElement;
 
+    // ? Basic Data
     export const name = document.getElementById("name") as HTMLInputElement;
-    export const listNames = document.getElementById("task-names") as HTMLDataListElement;
     export const description = document.getElementById("description") as HTMLTextAreaElement;
 
+    // ? Date Data
     export const day = document.getElementById("day") as HTMLInputElement;
     export const year = document.getElementById("year") as HTMLInputElement;
     export const month = document.getElementById("month") as HTMLInputElement;
 
-    export const restartTimeData = () => {
-        const date = new Date();
-        year.value = date.getFullYear().toString();
-        day.value = date.getDate().toString().padStart(2, "0");
-        month.value = (date.getMonth() + 1).toString().padStart(2, "0");
+    // ? Special Data
+    export const color = document.getElementById("color") as HTMLInputElement;
+
+    export const reset = () => {
+        form.reset();
+        resetDateData();
     };
 
-    export const parseDate = (date: string) => date.padStart(2, "0");
+    const showEndColor = () => {
+        color.style.color = color.value;
+    };
+
+    const resetDateData = () => {
+        const date = new Date();
+        day.value = date.getDate().toString();
+        year.value = date.getFullYear().toString();
+        month.value = (date.getMonth() + 1).toString();
+    };
 
     export const isValidForm = () => !!name.value && !!description.value;
 
-    restartTimeData();
+    export const getDateData = () => `${year.value} / ${month.value} / ${day.value}`;
+
+    color.addEventListener("input", showEndColor, false);
+
+    reset();
 }

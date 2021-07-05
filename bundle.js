@@ -3,21 +3,30 @@ var Formulary;
 (function (Formulary) {
     Formulary.form = document.getElementById("form");
     Formulary.modal = document.getElementById("form-modal");
+    Formulary.namesNode = document.getElementById("task-names");
     Formulary.name = document.getElementById("name");
-    Formulary.listNames = document.getElementById("task-names");
     Formulary.description = document.getElementById("description");
     Formulary.day = document.getElementById("day");
     Formulary.year = document.getElementById("year");
     Formulary.month = document.getElementById("month");
-    Formulary.restartTimeData = function () {
-        var date = new Date();
-        Formulary.year.value = date.getFullYear().toString();
-        Formulary.day.value = date.getDate().toString().padStart(2, "0");
-        Formulary.month.value = (date.getMonth() + 1).toString().padStart(2, "0");
+    Formulary.color = document.getElementById("color");
+    Formulary.reset = function () {
+        Formulary.form.reset();
+        resetDateData();
     };
-    Formulary.parseDate = function (date) { return date.padStart(2, "0"); };
+    var showEndColor = function () {
+        Formulary.color.style.color = Formulary.color.value;
+    };
+    var resetDateData = function () {
+        var date = new Date();
+        Formulary.day.value = date.getDate().toString();
+        Formulary.year.value = date.getFullYear().toString();
+        Formulary.month.value = (date.getMonth() + 1).toString();
+    };
     Formulary.isValidForm = function () { return !!Formulary.name.value && !!Formulary.description.value; };
-    Formulary.restartTimeData();
+    Formulary.getDateData = function () { return Formulary.year.value + " / " + Formulary.month.value + " / " + Formulary.day.value; };
+    Formulary.color.addEventListener("input", showEndColor, false);
+    Formulary.reset();
 })(Formulary || (Formulary = {}));
 var Task;
 (function (Task) {
@@ -25,10 +34,9 @@ var Task;
     Task.onCreateTask = function (_a) {
         var name = _a.name, description = _a.description, date = _a.date;
     };
-    var create = function (_a) {
-        var name = _a.name, description = _a.description, date = _a.date;
-        Task.tasks.push({ name: name, description: description, date: date });
-        Task.onCreateTask({ name: name, description: description, date: date });
+    var create = function (task) {
+        Task.tasks.push(task);
+        Task.onCreateTask(task);
         close();
         Task.save();
     };
@@ -37,17 +45,20 @@ var Task;
         Formulary.form.reset();
     };
     Task.builder = function (_a) {
-        var name = _a.name, description = _a.description, date = _a.date;
+        var name = _a.name, description = _a.description, date = _a.date, color = _a.color;
         var task = document.createElement("div");
         var taskHead = document.createElement("div");
         var taskBody = document.createElement("div");
         task.classList.add("task");
         taskHead.classList.add("task__head");
         taskBody.classList.add("task__body");
-        taskHead.innerHTML = "\n        " + name + " -\n            <small>\n                <i>\n                    " + date.join(" / ") + "\n                </i>\n            </small>\n        ";
+        taskHead.innerHTML = "\n        " + name + " -\n            <small>\n                <i>\n                    " + date + "\n                </i>\n            </small>\n        ";
         taskBody.textContent = description;
         task.appendChild(taskHead);
         task.appendChild(taskBody);
+        task.style.borderColor = color;
+        taskHead.style.borderBottomColor = color;
+        task.style.boxShadow = "0 0 10px " + color;
         return task;
     };
     Task.remove = function (key) {
@@ -58,12 +69,9 @@ var Task;
     Task.createTask = function () {
         create({
             name: Formulary.name.value,
+            color: Formulary.color.value,
+            date: Formulary.getDateData(),
             description: Formulary.description.value,
-            date: [
-                Formulary.year.value,
-                Formulary.parseDate(Formulary.month.value),
-                Formulary.parseDate(Formulary.day.value),
-            ],
         });
     };
     Formulary.form.addEventListener("click", function (e) {
@@ -97,18 +105,17 @@ var optionFragment = document.createDocumentFragment();
 toggle.addEventListener("click", function () {
     Formulary.modal.classList.remove("hide");
 });
-var createTask = function (_a) {
-    var name = _a.name, description = _a.description, date = _a.date;
+var createTask = function (taskObject) {
     var block = document.createElement("div");
-    var task = Task.builder({ name: name, description: description, date: date });
+    var task = Task.builder(taskObject);
     block.classList.add("block");
     block.appendChild(task);
-    block.id = name;
+    block.id = taskObject.name;
     block.addEventListener("click", function () {
         Modal.modal.classList.remove("hide");
-        Modal.name.textContent = name;
-        Modal.name.dataset.key = name;
-        Modal.description.textContent = description;
+        Modal.name.textContent = taskObject.name;
+        Modal.name.dataset.key = taskObject.name;
+        Modal.description.textContent = taskObject.description;
     });
     return block;
 };
@@ -138,10 +145,9 @@ Modal.close.addEventListener("click", function () {
     Modal.name.dataset.key = "";
     Modal.description.textContent = "";
 });
-Task.onCreateTask = function (_a) {
-    var name = _a.name, description = _a.description, date = _a.date;
-    container.appendChild(createTask({ name: name, description: description, date: date }));
-    Formulary.listNames.appendChild(createOption({ name: name, description: description, date: date }));
+Task.onCreateTask = function (task) {
+    container.appendChild(createTask(task));
+    Formulary.namesNode.appendChild(createOption(task));
 };
 container.appendChild(fragment);
-Formulary.listNames.appendChild(optionFragment);
+Formulary.namesNode.appendChild(optionFragment);
