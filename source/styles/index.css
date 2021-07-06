@@ -22,6 +22,7 @@ body {
 .app__head {
     height: 5vh;
     display: flex;
+    user-select: none;
     align-items: center;
     background-color: #0005;
     animation: AppHeadBorder 2s infinite;

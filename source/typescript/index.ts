@@ -1,5 +1,8 @@
+/// <reference path="translator.ts"/>
 /// <reference path="tasks.ts"/>
 /// <reference path="modal.ts"/>
+
+Translator.translate();
 
 const app = document.getElementById("app") as HTMLDivElement;
 const toggle = document.getElementById("toggle") as HTMLDivElement;

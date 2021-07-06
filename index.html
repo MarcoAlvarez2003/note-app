@@ -2,10 +2,10 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="source/styles/index.css" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Notes</title>
+        <title class="traductor" data-keyname="app_title">Notes</title>
     </head>
     <body>
         <!-- Modals -->
@@ -20,8 +20,9 @@
                         spellcheck="off"
                         list="task-names"
                         autocomplete="off"
-                        class="form__input form__input--dark"
+                        data-keyname="form_name_placeholder"
                         placeholder="Write name for this task"
+                        class="form__input form__input--dark traductor"
                     />
                 </div>
 
@@ -29,51 +30,58 @@
                     <textarea
                         spellcheck="off"
                         id="description"
-                        class="form__area form__area--dark"
+                        data-keyname="form_description_placeholder"
+                        class="form__area form__area--dark traductor"
                         placeholder="Write instructions for this task"
                     ></textarea>
                 </div>
 
                 <div class="form__block form__block--flex">
                     <input
-                        type="number"
-                        class="form__input--dark form__input--date"
                         id="year"
+                        type="number"
                         placeholder="Year"
+                        data-keyname="form_year_placeholder"
+                        class="form__input--dark form__input--date traductor"
                     />
                     <input
-                        type="number"
-                        class="form__input--dark form__input--date"
                         id="month"
+                        type="number"
                         placeholder="Month"
+                        data-keyname="form_month_placeholder"
+                        class="form__input--dark form__input--date traductor"
                     />
                     <input
-                        type="number"
-                        class="form__input--dark form__input--date"
                         id="day"
+                        type="number"
                         placeholder="Day"
+                        data-keyname="form_day_placeholder"
+                        class="form__input--dark form__input--date traductor"
                     />
                     <input
                         id="color"
                         type="text"
                         spellcheck="off"
-                        placeholder="Write a color name)"
-                        class="form__input--dark form__input--date"
+                        placeholder="Color"
+                        data-keyname="form_color_placeholder"
+                        class="form__input--dark form__input--date traductor"
                     />
                 </div>
 
                 <div class="form__block form__block--flex">
                     <button
                         type="button"
-                        class="form__button form__button--dark"
                         data-action="create"
+                        data-keyname="form_create_button"
+                        class="form__button form__button--dark traductor"
                     >
                         Create
                     </button>
                     <button
                         type="button"
-                        class="form__button form__button--dark"
                         data-action="close"
+                        data-keyname="form_close_button"
+                        class="form__button form__button--dark traductor"
                     >
                         Close
                     </button>
@@ -95,8 +103,20 @@
                     </p>
                 </div>
                 <div class="showbox__controlbox">
-                    <button class="form__button form__button--dark" id="remove">Remove</button>
-                    <button class="form__button form__button--dark" id="close-modal">Back</button>
+                    <button
+                        class="form__button form__button--dark traductor"
+                        data-keyname="modal_remove_button"
+                        id="remove"
+                    >
+                        Remove
+                    </button>
+                    <button
+                        class="form__button form__button--dark traductor"
+                        data-keyname="modal_close_button"
+                        id="close-modal"
+                    >
+                        Back
+                    </button>
                 </div>
             </div>
         </div>
@@ -106,7 +126,7 @@
         <!-- App -->
         <div id="app" class="app">
             <header class="app__head">
-                <h1 class="app__title">Notes</h1>
+                <h1 id="reset-lang" class="app__title traductor" data-keyname="app_title">Notes</h1>
             </header>
             <main id="container" class="app__body">
                 <div class="block" id="toggle">
@@ -116,6 +136,6 @@
                 </div>
             </main>
         </div>
-        <script src="bundle.js"></script>
+        <script src="source/build/bundle.js"></script>
     </body>
 </html>
