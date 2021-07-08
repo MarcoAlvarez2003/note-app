@@ -248,7 +248,7 @@ body {
 
 @media screen and (max-width: 600px) {
     body {
-        height: 91.9vh;
+        height: 92vh;
     }
 
     .app__body::-webkit-scrollbar,
