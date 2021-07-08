@@ -250,4 +250,9 @@ body {
     body {
         height: 91.9vh;
     }
+
+    .app__body::-webkit-scrollbar,
+    .showbox__paragraph::-webkit-scrollbar {
+        border-left: 0;
+    }
 }
