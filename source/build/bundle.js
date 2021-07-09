@@ -1,9 +1,15 @@
 "use strict";
+var DisplayAdapter;
+(function (DisplayAdapter) {
+    DisplayAdapter.adapt = function () {
+        document.body.style.height = window.innerHeight + "px";
+    };
+})(DisplayAdapter || (DisplayAdapter = {}));
 var Formulary;
 (function (Formulary) {
     Formulary.form = document.getElementById("form");
     Formulary.modal = document.getElementById("form-modal");
-    Formulary.namesNode = document.getElementById("task-names");
+    Formulary.listNames = document.getElementById("task-names");
     Formulary.name = document.getElementById("name");
     Formulary.description = document.getElementById("description");
     Formulary.day = document.getElementById("day");
@@ -28,6 +34,140 @@ var Formulary;
     Formulary.color.addEventListener("input", showEndColor, false);
     Formulary.reset();
 })(Formulary || (Formulary = {}));
+var main = function () {
+    var fragment = document.createDocumentFragment();
+    var optionFragment = document.createDocumentFragment();
+    Interface.taskActivator.addEventListener("click", function () {
+        Formulary.modal.classList.remove("hide");
+    });
+    var createTask = function (taskObject) {
+        var block = document.createElement("div");
+        var task = Task.builder(taskObject);
+        block.classList.add("block");
+        block.appendChild(task);
+        block.id = taskObject.name;
+        block.addEventListener("click", function () {
+            TaskDesk.modal.classList.remove("hide");
+            TaskDesk.name.textContent = taskObject.name;
+            TaskDesk.name.dataset.key = taskObject.name;
+            TaskDesk.description.textContent = taskObject.description;
+        });
+        return block;
+    };
+    var createOption = function (_a) {
+        var name = _a.name, description = _a.description;
+        var option = document.createElement("option");
+        option.textContent = description;
+        option.id = "__" + name;
+        option.value = name;
+        return option;
+    };
+    Task.tasks.forEach(function (task) {
+        fragment.appendChild(createTask(task));
+        optionFragment.appendChild(createOption(task));
+    });
+    TaskDesk.remove.addEventListener("click", function () {
+        var _a, _b;
+        var key = TaskDesk.name.dataset.key;
+        Task.remove(key);
+        (_a = document.getElementById(key)) === null || _a === void 0 ? void 0 : _a.remove();
+        (_b = document.getElementById("__" + key)) === null || _b === void 0 ? void 0 : _b.remove();
+        TaskDesk.close.click();
+    });
+    TaskDesk.close.addEventListener("click", function () {
+        TaskDesk.modal.classList.add("hide");
+        TaskDesk.name.textContent = "";
+        TaskDesk.name.dataset.key = "";
+        TaskDesk.description.textContent = "";
+    });
+    Task.onCreateTask = function (task) {
+        Interface.taskContainer.appendChild(createTask(task));
+        Formulary.listNames.appendChild(createOption(task));
+    };
+    Interface.taskContainer.appendChild(fragment);
+    Formulary.listNames.appendChild(optionFragment);
+};
+addEventListener("load", function () {
+    DisplayAdapter.adapt();
+    Translator.translate();
+    main();
+});
+addEventListener("resize", DisplayAdapter.adapt, false);
+var Interface;
+(function (Interface) {
+    Interface.application = document.getElementById("app");
+    Interface.taskActivator = document.getElementById("activator");
+    Interface.taskContainer = document.getElementById("container");
+})(Interface || (Interface = {}));
+var TaskDesk;
+(function (TaskDesk) {
+    TaskDesk.modal = document.getElementById("modal");
+    TaskDesk.name = document.getElementById("task-desk-title");
+    TaskDesk.description = document.getElementById("task-desk-content");
+    TaskDesk.remove = document.getElementById("remove");
+    TaskDesk.close = document.getElementById("close-modal");
+})(TaskDesk || (TaskDesk = {}));
+var Task;
+(function (Task) {
+    Task.tasks = JSON.parse(localStorage.getItem("TaskStore") || "[]");
+    Task.onCreateTask = function (_a) {
+        var name = _a.name, description = _a.description, date = _a.date;
+    };
+    var create = function (task) {
+        Task.tasks.push(task);
+        Task.onCreateTask(task);
+        close();
+        Task.save();
+    };
+    var close = function () {
+        Formulary.modal.classList.add("hide");
+        Formulary.form.reset();
+    };
+    Task.builder = function (_a) {
+        var name = _a.name, description = _a.description, date = _a.date, color = _a.color;
+        var task = document.createElement("div");
+        var taskHead = document.createElement("div");
+        var taskBody = document.createElement("div");
+        task.classList.add("task");
+        taskHead.classList.add("task__head");
+        taskBody.classList.add("task__body");
+        taskHead.innerHTML = "\n        " + name + " -\n            <small>\n                <i>\n                    " + date + "\n                </i>\n            </small>\n        ";
+        taskBody.textContent = description;
+        task.appendChild(taskHead);
+        task.appendChild(taskBody);
+        task.style.borderColor = color;
+        taskHead.style.borderBottomColor = color;
+        task.style.boxShadow = "0 0 10px " + color;
+        return task;
+    };
+    Task.remove = function (key) {
+        Task.tasks.splice(Task.tasks.findIndex(function (task) { return task.name === key; }), 1);
+        Task.save();
+    };
+    Task.save = function () { return localStorage.setItem("TaskStore", JSON.stringify(Task.tasks)); };
+    Task.createTask = function () {
+        create({
+            name: Formulary.name.value,
+            color: Formulary.color.value,
+            date: Formulary.getDateData(),
+            description: Formulary.description.value,
+        });
+    };
+    Formulary.form.addEventListener("click", function (e) {
+        e.preventDefault();
+        var action = e.target.dataset.action;
+        if (action) {
+            if (action === "create") {
+                if (Formulary.isValidForm())
+                    Task.createTask();
+                else
+                    alert("Invalid Task");
+            }
+            else
+                close();
+        }
+    });
+})(Task || (Task = {}));
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -176,127 +316,3 @@ var Translator;
         });
     }); };
 })(Translator || (Translator = {}));
-var Task;
-(function (Task) {
-    Task.tasks = JSON.parse(localStorage.getItem("TaskStore") || "[]");
-    Task.onCreateTask = function (_a) {
-        var name = _a.name, description = _a.description, date = _a.date;
-    };
-    var create = function (task) {
-        Task.tasks.push(task);
-        Task.onCreateTask(task);
-        close();
-        Task.save();
-    };
-    var close = function () {
-        Formulary.modal.classList.add("hide");
-        Formulary.form.reset();
-    };
-    Task.builder = function (_a) {
-        var name = _a.name, description = _a.description, date = _a.date, color = _a.color;
-        var task = document.createElement("div");
-        var taskHead = document.createElement("div");
-        var taskBody = document.createElement("div");
-        task.classList.add("task");
-        taskHead.classList.add("task__head");
-        taskBody.classList.add("task__body");
-        taskHead.innerHTML = "\n        " + name + " -\n            <small>\n                <i>\n                    " + date + "\n                </i>\n            </small>\n        ";
-        taskBody.textContent = description;
-        task.appendChild(taskHead);
-        task.appendChild(taskBody);
-        task.style.borderColor = color;
-        taskHead.style.borderBottomColor = color;
-        task.style.boxShadow = "0 0 10px " + color;
-        return task;
-    };
-    Task.remove = function (key) {
-        Task.tasks.splice(Task.tasks.findIndex(function (task) { return task.name === key; }), 1);
-        Task.save();
-    };
-    Task.save = function () { return localStorage.setItem("TaskStore", JSON.stringify(Task.tasks)); };
-    Task.createTask = function () {
-        create({
-            name: Formulary.name.value,
-            color: Formulary.color.value,
-            date: Formulary.getDateData(),
-            description: Formulary.description.value,
-        });
-    };
-    Formulary.form.addEventListener("click", function (e) {
-        e.preventDefault();
-        var action = e.target.dataset.action;
-        if (action) {
-            if (action === "create") {
-                if (Formulary.isValidForm())
-                    Task.createTask();
-                else
-                    alert("Invalid Task");
-            }
-            else
-                close();
-        }
-    });
-})(Task || (Task = {}));
-var Modal;
-(function (Modal) {
-    Modal.modal = document.getElementById("modal");
-    Modal.name = document.getElementById("showbox-title");
-    Modal.description = document.getElementById("showbox-content");
-    Modal.remove = document.getElementById("remove");
-    Modal.close = document.getElementById("close-modal");
-})(Modal || (Modal = {}));
-Translator.translate();
-var app = document.getElementById("app");
-var toggle = document.getElementById("toggle");
-var container = document.getElementById("container");
-var fragment = document.createDocumentFragment();
-var optionFragment = document.createDocumentFragment();
-toggle.addEventListener("click", function () {
-    Formulary.modal.classList.remove("hide");
-});
-var createTask = function (taskObject) {
-    var block = document.createElement("div");
-    var task = Task.builder(taskObject);
-    block.classList.add("block");
-    block.appendChild(task);
-    block.id = taskObject.name;
-    block.addEventListener("click", function () {
-        Modal.modal.classList.remove("hide");
-        Modal.name.textContent = taskObject.name;
-        Modal.name.dataset.key = taskObject.name;
-        Modal.description.textContent = taskObject.description;
-    });
-    return block;
-};
-var createOption = function (_a) {
-    var name = _a.name, description = _a.description;
-    var option = document.createElement("option");
-    option.textContent = description;
-    option.id = "__" + name;
-    option.value = name;
-    return option;
-};
-Task.tasks.forEach(function (task) {
-    fragment.appendChild(createTask(task));
-    optionFragment.appendChild(createOption(task));
-});
-Modal.remove.addEventListener("click", function () {
-    var _a, _b;
-    var key = Modal.name.dataset.key;
-    Task.remove(key);
-    (_a = document.getElementById(key)) === null || _a === void 0 ? void 0 : _a.remove();
-    (_b = document.getElementById("__" + key)) === null || _b === void 0 ? void 0 : _b.remove();
-    Modal.close.click();
-});
-Modal.close.addEventListener("click", function () {
-    Modal.modal.classList.add("hide");
-    Modal.name.textContent = "";
-    Modal.name.dataset.key = "";
-    Modal.description.textContent = "";
-});
-Task.onCreateTask = function (task) {
-    container.appendChild(createTask(task));
-    Formulary.namesNode.appendChild(createOption(task));
-};
-container.appendChild(fragment);
-Formulary.namesNode.appendChild(optionFragment);
