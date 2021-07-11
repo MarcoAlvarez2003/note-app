@@ -12,25 +12,14 @@ var Formulary;
     Formulary.listNames = document.getElementById("task-names");
     Formulary.name = document.getElementById("name");
     Formulary.description = document.getElementById("description");
-    Formulary.day = document.getElementById("day");
-    Formulary.year = document.getElementById("year");
-    Formulary.month = document.getElementById("month");
     Formulary.color = document.getElementById("color");
     Formulary.reset = function () {
         Formulary.form.reset();
-        resetDateData();
     };
     var showEndColor = function () {
         Formulary.color.style.color = Formulary.color.value;
     };
-    var resetDateData = function () {
-        var date = new Date();
-        Formulary.day.value = date.getDate().toString();
-        Formulary.year.value = date.getFullYear().toString();
-        Formulary.month.value = (date.getMonth() + 1).toString();
-    };
     Formulary.isValidForm = function () { return !!Formulary.name.value && !!Formulary.description.value; };
-    Formulary.getDateData = function () { return Formulary.year.value + " / " + Formulary.month.value + " / " + Formulary.day.value; };
     Formulary.color.addEventListener("input", showEndColor, false);
     Formulary.reset();
 })(Formulary || (Formulary = {}));
@@ -50,7 +39,7 @@ var main = function () {
             TaskDesk.modal.classList.remove("hide");
             TaskDesk.name.textContent = taskObject.name;
             TaskDesk.name.dataset.key = taskObject.name;
-            TaskDesk.description.textContent = taskObject.description;
+            TaskDesk.description.innerHTML = taskObject.description;
         });
         return block;
     };
@@ -110,9 +99,7 @@ var TaskDesk;
 var Task;
 (function (Task) {
     Task.tasks = JSON.parse(localStorage.getItem("TaskStore") || "[]");
-    Task.onCreateTask = function (_a) {
-        var name = _a.name, description = _a.description, date = _a.date;
-    };
+    Task.onCreateTask = function (task) { };
     var create = function (task) {
         Task.tasks.push(task);
         Task.onCreateTask(task);
@@ -124,15 +111,15 @@ var Task;
         Formulary.form.reset();
     };
     Task.builder = function (_a) {
-        var name = _a.name, description = _a.description, date = _a.date, color = _a.color;
+        var name = _a.name, description = _a.description, color = _a.color;
         var task = document.createElement("div");
         var taskHead = document.createElement("div");
         var taskBody = document.createElement("div");
         task.classList.add("task");
         taskHead.classList.add("task__head");
         taskBody.classList.add("task__body");
-        taskHead.innerHTML = "\n        " + name + " -\n            <small>\n                <i>\n                    " + date + "\n                </i>\n            </small>\n        ";
-        taskBody.textContent = description;
+        taskHead.textContent = name;
+        taskBody.innerHTML = description;
         task.appendChild(taskHead);
         task.appendChild(taskBody);
         task.style.borderColor = color;
@@ -149,7 +136,6 @@ var Task;
         create({
             name: Formulary.name.value,
             color: Formulary.color.value,
-            date: Formulary.getDateData(),
             description: Formulary.description.value,
         });
     };

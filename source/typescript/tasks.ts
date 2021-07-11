@@ -3,7 +3,6 @@
 namespace Task {
     export interface TaskObject {
         name: string;
-        date: string;
         color: string;
         description: string;
     }
@@ -12,7 +11,7 @@ namespace Task {
 
     export const tasks: TaskObject[] = JSON.parse(localStorage.getItem("TaskStore") || "[]");
 
-    export let onCreateTask = ({ name, description, date }: TaskObject) => {};
+    export let onCreateTask = (task: TaskObject) => {};
 
     const create = (task: TaskObject) => {
         tasks.push(task);
@@ -26,7 +25,7 @@ namespace Task {
         Formulary.form.reset();
     };
 
-    export const builder = ({ name, description, date, color }: TaskObject) => {
+    export const builder = ({ name, description, color }: TaskObject) => {
         const task = document.createElement("div");
         const taskHead = document.createElement("div");
         const taskBody = document.createElement("div");
@@ -35,15 +34,8 @@ namespace Task {
         taskHead.classList.add("task__head");
         taskBody.classList.add("task__body");
 
-        taskHead.innerHTML = `
-        ${name} -
-            <small>
-                <i>
-                    ${date}
-                </i>
-            </small>
-        `;
-        taskBody.textContent = description;
+        taskHead.textContent = name;
+        taskBody.innerHTML = description;
 
         task.appendChild(taskHead);
         task.appendChild(taskBody);
@@ -68,7 +60,6 @@ namespace Task {
         create({
             name: Formulary.name.value,
             color: Formulary.color.value,
-            date: Formulary.getDateData(),
             description: Formulary.description.value,
         });
     };

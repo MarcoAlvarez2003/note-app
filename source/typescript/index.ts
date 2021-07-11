@@ -19,7 +19,7 @@ const main = () => {
             TaskDesk.modal.classList.remove("hide");
             TaskDesk.name.textContent = taskObject.name;
             TaskDesk.name.dataset.key = taskObject.name;
-            TaskDesk.description.textContent = taskObject.description;
+            TaskDesk.description.innerHTML = taskObject.description;
         });
 
         return block;
