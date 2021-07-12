@@ -15,13 +15,13 @@ namespace Formulary {
         form.reset();
     };
 
-    const showEndColor = () => {
+    const showFinalColor = () => {
         color.style.color = color.value;
     };
 
     export const isValidForm = () => !!name.value && !!description.value;
 
-    color.addEventListener("input", showEndColor, false);
+    color.addEventListener("input", showFinalColor, false);
 
     reset();
 }

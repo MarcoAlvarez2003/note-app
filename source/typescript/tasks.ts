@@ -1,5 +1,3 @@
-///<reference path="form.ts"/>
-
 namespace Task {
     export interface TaskObject {
         name: string;
