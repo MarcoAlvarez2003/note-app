@@ -6,7 +6,7 @@ interface Task {
 
 class Task {
     protected static __oncreate = (task: Task) => {};
-    protected static tasks: Task[] = JSON.parse(localStorage.getItem("TaskStore") || "[]");
+    public static tasks: Task[] = JSON.parse(localStorage.getItem("TaskStore") || "[]");
 
     constructor({ name, color, description }: Task) {
         Task.tasks.push({ name, color, description });
