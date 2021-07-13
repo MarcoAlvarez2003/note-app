@@ -1,75 +1,70 @@
-namespace Task {
-    export interface TaskObject {
-        name: string;
-        color: string;
-        description: string;
+interface Task {
+    name: string;
+    color: string;
+    description: string;
+}
+
+class Task {
+    protected static __oncreate = (task: Task) => {};
+    protected static tasks: Task[] = JSON.parse(localStorage.getItem("TaskStore") || "[]");
+
+    constructor({ name, color, description }: Task) {
+        Task.tasks.push({ name, color, description });
+        Task.__oncreate({ name, color, description });
+        Formulary.close();
+        Task.save();
     }
 
-    type Actions = "create" | "close";
+    public static build({ name, color, description }: Task) {
+        const task = this.createNodeWithClass("div", "task");
+        const head = this.createNodeWithClass("div", "task__head");
+        const body = this.createNodeWithClass("div", "task__body");
 
-    export const tasks: TaskObject[] = JSON.parse(localStorage.getItem("TaskStore") || "[]");
-
-    export let onCreateTask = (task: TaskObject) => {};
-
-    const create = (task: TaskObject) => {
-        tasks.push(task);
-        onCreateTask(task);
-        close();
-        save();
-    };
-
-    const close = () => {
-        Formulary.modal.classList.add("hide");
-        Formulary.form.reset();
-    };
-
-    export const builder = ({ name, description, color }: TaskObject) => {
-        const task = document.createElement("div");
-        const taskHead = document.createElement("div");
-        const taskBody = document.createElement("div");
-
-        task.classList.add("task");
-        taskHead.classList.add("task__head");
-        taskBody.classList.add("task__body");
-
-        taskHead.textContent = name;
-        taskBody.innerHTML = description;
-
-        task.appendChild(taskHead);
-        task.appendChild(taskBody);
+        task.appendChild(head);
+        task.appendChild(body);
+        head.textContent = name;
+        body.innerHTML = description;
         task.style.borderColor = color;
-        taskHead.style.borderBottomColor = color;
+        head.style.borderBottomColor = color;
         task.style.boxShadow = `0 0 10px ${color}`;
 
         return task;
-    };
+    }
 
-    export const remove = (key: string): void => {
-        tasks.splice(
-            tasks.findIndex((task) => task.name === key),
-            1
-        );
-        save();
-    };
+    protected static createNodeWithClass(tagName: string, className: string) {
+        const node = document.createElement(tagName);
+        node.classList.add(className);
+        return node;
+    }
 
-    export const save = () => localStorage.setItem("TaskStore", JSON.stringify(tasks));
+    public static remove(name: string) {
+        this.tasks.splice(this.findIndex(name), 1);
+        this.save();
+    }
 
-    export const createTask = () => {
-        create({
+    protected static findIndex(key: string): number {
+        return this.tasks.findIndex(({ name }) => name === key);
+    }
+
+    protected static save(): void {
+        localStorage.setItem("TaskStore", JSON.stringify(this.tasks));
+    }
+
+    public static set onCreate(fn: (task: Task) => void) {
+        this.__oncreate = fn;
+    }
+}
+
+Formulary.form.addEventListener("click", (e) => {
+    e.preventDefault();
+    const action = (e.target as HTMLElement).dataset.action as string;
+
+    if (action === "create" && Formulary.isValidForm())
+        new Task({
             name: Formulary.name.value,
             color: Formulary.color.value,
             description: Formulary.description.value,
         });
-    };
-
-    Formulary.form.addEventListener("click", (e) => {
-        e.preventDefault();
-        const action = (e.target as HTMLElement).dataset.action as Actions;
-        if (action) {
-            if (action === "create") {
-                if (Formulary.isValidForm()) createTask();
-                else alert("Invalid Task");
-            } else close();
-        }
-    });
-}
+    else if (action === "ceate" && !Formulary.isValidForm()) alert("Invalid Task");
+    else if (action === "close") Formulary.close();
+});

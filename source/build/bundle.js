@@ -16,11 +16,15 @@ var Formulary;
     Formulary.reset = function () {
         Formulary.form.reset();
     };
-    var showEndColor = function () {
+    var showFinalColor = function () {
         Formulary.color.style.color = Formulary.color.value;
     };
     Formulary.isValidForm = function () { return !!Formulary.name.value && !!Formulary.description.value; };
-    Formulary.color.addEventListener("input", showEndColor, false);
+    Formulary.color.addEventListener("input", showFinalColor, false);
+    Formulary.close = function () {
+        Formulary.modal.classList.add("hide");
+        Formulary.reset();
+    };
     Formulary.reset();
 })(Formulary || (Formulary = {}));
 var main = function () {
@@ -31,7 +35,7 @@ var main = function () {
     });
     var createTask = function (taskObject) {
         var block = document.createElement("div");
-        var task = Task.builder(taskObject);
+        var task = Task.build(taskObject);
         block.classList.add("block");
         block.appendChild(task);
         block.id = taskObject.name;
@@ -69,7 +73,7 @@ var main = function () {
         TaskDesk.name.dataset.key = "";
         TaskDesk.description.textContent = "";
     });
-    Task.onCreateTask = function (task) {
+    Task.onCreate = function (task) {
         Interface.taskContainer.appendChild(createTask(task));
         Formulary.listNames.appendChild(createOption(task));
     };
@@ -96,64 +100,71 @@ var TaskDesk;
     TaskDesk.remove = document.getElementById("remove");
     TaskDesk.close = document.getElementById("close-modal");
 })(TaskDesk || (TaskDesk = {}));
-var Task;
-(function (Task) {
-    Task.tasks = JSON.parse(localStorage.getItem("TaskStore") || "[]");
-    Task.onCreateTask = function (task) { };
-    var create = function (task) {
-        Task.tasks.push(task);
-        Task.onCreateTask(task);
-        close();
+var Task = (function () {
+    function Task(_a) {
+        var name = _a.name, color = _a.color, description = _a.description;
+        Task.tasks.push({ name: name, color: color, description: description });
+        Task.__oncreate({ name: name, color: color, description: description });
+        Formulary.close();
         Task.save();
-    };
-    var close = function () {
-        Formulary.modal.classList.add("hide");
-        Formulary.form.reset();
-    };
-    Task.builder = function (_a) {
-        var name = _a.name, description = _a.description, color = _a.color;
-        var task = document.createElement("div");
-        var taskHead = document.createElement("div");
-        var taskBody = document.createElement("div");
-        task.classList.add("task");
-        taskHead.classList.add("task__head");
-        taskBody.classList.add("task__body");
-        taskHead.textContent = name;
-        taskBody.innerHTML = description;
-        task.appendChild(taskHead);
-        task.appendChild(taskBody);
+    }
+    Task.build = function (_a) {
+        var name = _a.name, color = _a.color, description = _a.description;
+        var task = this.createNodeWithClass("div", "task");
+        var head = this.createNodeWithClass("div", "task__head");
+        var body = this.createNodeWithClass("div", "task__body");
+        task.appendChild(head);
+        task.appendChild(body);
+        head.textContent = name;
+        body.innerHTML = description;
         task.style.borderColor = color;
-        taskHead.style.borderBottomColor = color;
+        head.style.borderBottomColor = color;
         task.style.boxShadow = "0 0 10px " + color;
         return task;
     };
-    Task.remove = function (key) {
-        Task.tasks.splice(Task.tasks.findIndex(function (task) { return task.name === key; }), 1);
-        Task.save();
+    Task.createNodeWithClass = function (tagName, className) {
+        var node = document.createElement(tagName);
+        node.classList.add(className);
+        return node;
     };
-    Task.save = function () { return localStorage.setItem("TaskStore", JSON.stringify(Task.tasks)); };
-    Task.createTask = function () {
-        create({
+    Task.remove = function (name) {
+        this.tasks.splice(this.findIndex(name), 1);
+        this.save();
+    };
+    Task.findIndex = function (key) {
+        return this.tasks.findIndex(function (_a) {
+            var name = _a.name;
+            return name === key;
+        });
+    };
+    Task.save = function () {
+        localStorage.setItem("TaskStore", JSON.stringify(this.tasks));
+    };
+    Object.defineProperty(Task, "onCreate", {
+        set: function (fn) {
+            this.__oncreate = fn;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Task.__oncreate = function (task) { };
+    Task.tasks = JSON.parse(localStorage.getItem("TaskStore") || "[]");
+    return Task;
+}());
+Formulary.form.addEventListener("click", function (e) {
+    e.preventDefault();
+    var action = e.target.dataset.action;
+    if (action === "create" && Formulary.isValidForm())
+        new Task({
             name: Formulary.name.value,
             color: Formulary.color.value,
             description: Formulary.description.value,
         });
-    };
-    Formulary.form.addEventListener("click", function (e) {
-        e.preventDefault();
-        var action = e.target.dataset.action;
-        if (action) {
-            if (action === "create") {
-                if (Formulary.isValidForm())
-                    Task.createTask();
-                else
-                    alert("Invalid Task");
-            }
-            else
-                close();
-        }
-    });
-})(Task || (Task = {}));
+    else if (action === "ceate" && !Formulary.isValidForm())
+        alert("Invalid Task");
+    else if (action === "close")
+        Formulary.close();
+});
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {

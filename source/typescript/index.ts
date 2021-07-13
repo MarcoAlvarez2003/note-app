@@ -6,9 +6,9 @@ const main = () => {
         Formulary.modal.classList.remove("hide");
     });
 
-    const createTask = (taskObject: Task.TaskObject) => {
+    const createTask = (taskObject: Task) => {
         const block = document.createElement("div");
-        const task = Task.builder(taskObject);
+        const task = Task.build(taskObject);
 
         block.classList.add("block");
         block.appendChild(task);
@@ -25,7 +25,7 @@ const main = () => {
         return block;
     };
 
-    const createOption = ({ name, description }: Task.TaskObject) => {
+    const createOption = ({ name, description }: Task) => {
         const option = document.createElement("option");
         option.textContent = description;
         option.id = `__${name}`;
@@ -54,7 +54,7 @@ const main = () => {
         TaskDesk.description.textContent = "";
     });
 
-    Task.onCreateTask = (task) => {
+    Task.onCreate = (task) => {
         Interface.taskContainer.appendChild(createTask(task));
         Formulary.listNames.appendChild(createOption(task));
     };

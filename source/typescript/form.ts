@@ -23,5 +23,10 @@ namespace Formulary {
 
     color.addEventListener("input", showFinalColor, false);
 
+    export const close = () => {
+        modal.classList.add("hide");
+        reset();
+    };
+
     reset();
 }
