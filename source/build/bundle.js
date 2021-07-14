@@ -144,10 +144,6 @@ var Translator = (function () {
     });
     Translator.requestLanguage = function () {
         var lang = navigator.language.split("-")[0];
-        return this.saveLang(lang || "en");
-    };
-    Translator.saveLang = function (lang) {
-        localStorage.setItem("@notes/lang", lang);
         return lang;
     };
     Object.defineProperty(Translator, "translatableNodes", {

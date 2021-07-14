@@ -65,11 +65,6 @@ class Translator {
 
     protected static requestLanguage(): Languages {
         const lang = navigator.language.split("-")[0] as Languages;
-        return this.saveLang(lang || "en");
-    }
-
-    protected static saveLang(lang: Languages): Languages {
-        localStorage.setItem("@notes/lang", lang);
         return lang;
     }
 
