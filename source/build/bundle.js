@@ -1,10 +1,4 @@
 "use strict";
-var DisplayAdapter;
-(function (DisplayAdapter) {
-    DisplayAdapter.adapt = function () {
-        document.body.style.height = window.innerHeight + "px";
-    };
-})(DisplayAdapter || (DisplayAdapter = {}));
 var Formulary;
 (function (Formulary) {
     Formulary.form = document.getElementById("form");
@@ -27,31 +21,44 @@ var Formulary;
     };
     Formulary.reset();
 })(Formulary || (Formulary = {}));
+var DisplayAdapter;
+(function (DisplayAdapter) {
+    DisplayAdapter.adapt = function () {
+        document.body.style.height = window.innerHeight + "px";
+    };
+})(DisplayAdapter || (DisplayAdapter = {}));
 var main = function () {
+    var delay = 0;
     var fragment = document.createDocumentFragment();
     var optionFragment = document.createDocumentFragment();
     Interface.taskActivator.addEventListener("click", function () {
         Formulary.modal.classList.remove("hide");
     });
-    var createTask = function (taskObject) {
+    var createTask = function (__task) {
         var block = document.createElement("div");
-        var task = Task.build(taskObject);
+        var id = __task.id, name = __task.name, description = __task.description;
+        var task = Task.build(__task);
         block.classList.add("block");
         block.appendChild(task);
-        block.id = taskObject.name;
+        block.id = id;
+        block.style.position = "relative";
+        block.style.right = "100%";
+        block.style.animation = "Task 1s 1 forwards";
+        block.style.animationDelay = delay + "s";
         block.addEventListener("click", function () {
             TaskDesk.modal.classList.remove("hide");
-            TaskDesk.name.textContent = taskObject.name;
-            TaskDesk.name.dataset.key = taskObject.name;
-            TaskDesk.description.innerHTML = taskObject.description;
+            TaskDesk.name.textContent = name;
+            TaskDesk.name.dataset.key = id;
+            TaskDesk.description.innerHTML = description;
         });
+        delay += 0.25;
         return block;
     };
     var createOption = function (_a) {
-        var name = _a.name, description = _a.description;
+        var id = _a.id, name = _a.name, description = _a.description;
         var option = document.createElement("option");
         option.textContent = description;
-        option.id = "__" + name;
+        option.id = "$" + id;
         option.value = name;
         return option;
     };
@@ -63,8 +70,8 @@ var main = function () {
         var _a, _b;
         var key = TaskDesk.name.dataset.key;
         Task.remove(key);
-        (_a = document.getElementById(key)) === null || _a === void 0 ? void 0 : _a.remove();
-        (_b = document.getElementById("__" + key)) === null || _b === void 0 ? void 0 : _b.remove();
+        (_a = document.getElementById("$" + key)) === null || _a === void 0 ? void 0 : _a.remove();
+        (_b = document.getElementById(key)) === null || _b === void 0 ? void 0 : _b.remove();
         TaskDesk.close.click();
     });
     TaskDesk.close.addEventListener("click", function () {
@@ -86,85 +93,6 @@ addEventListener("load", function () {
     main();
 });
 addEventListener("resize", DisplayAdapter.adapt, false);
-var Interface;
-(function (Interface) {
-    Interface.application = document.getElementById("app");
-    Interface.taskActivator = document.getElementById("activator");
-    Interface.taskContainer = document.getElementById("container");
-})(Interface || (Interface = {}));
-var TaskDesk;
-(function (TaskDesk) {
-    TaskDesk.modal = document.getElementById("modal");
-    TaskDesk.name = document.getElementById("task-desk-title");
-    TaskDesk.description = document.getElementById("task-desk-content");
-    TaskDesk.remove = document.getElementById("remove");
-    TaskDesk.close = document.getElementById("close-modal");
-})(TaskDesk || (TaskDesk = {}));
-var Task = (function () {
-    function Task(_a) {
-        var name = _a.name, color = _a.color, description = _a.description;
-        Task.tasks.push({ name: name, color: color, description: description });
-        Task.__oncreate({ name: name, color: color, description: description });
-        Formulary.close();
-        Task.save();
-    }
-    Task.build = function (_a) {
-        var name = _a.name, color = _a.color, description = _a.description;
-        var task = this.createNodeWithClass("div", "task");
-        var head = this.createNodeWithClass("div", "task__head");
-        var body = this.createNodeWithClass("div", "task__body");
-        task.appendChild(head);
-        task.appendChild(body);
-        head.textContent = name;
-        body.innerHTML = description;
-        task.style.borderColor = color;
-        head.style.borderBottomColor = color;
-        task.style.boxShadow = "0 0 10px " + color;
-        return task;
-    };
-    Task.createNodeWithClass = function (tagName, className) {
-        var node = document.createElement(tagName);
-        node.classList.add(className);
-        return node;
-    };
-    Task.remove = function (name) {
-        this.tasks.splice(this.findIndex(name), 1);
-        this.save();
-    };
-    Task.findIndex = function (key) {
-        return this.tasks.findIndex(function (_a) {
-            var name = _a.name;
-            return name === key;
-        });
-    };
-    Task.save = function () {
-        localStorage.setItem("TaskStore", JSON.stringify(this.tasks));
-    };
-    Object.defineProperty(Task, "onCreate", {
-        set: function (fn) {
-            this.__oncreate = fn;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Task.__oncreate = function (task) { };
-    Task.tasks = JSON.parse(localStorage.getItem("TaskStore") || "[]");
-    return Task;
-}());
-Formulary.form.addEventListener("click", function (e) {
-    e.preventDefault();
-    var action = e.target.dataset.action;
-    if (action === "create" && Formulary.isValidForm())
-        new Task({
-            name: Formulary.name.value,
-            color: Formulary.color.value,
-            description: Formulary.description.value,
-        });
-    else if (action === "ceate" && !Formulary.isValidForm())
-        alert("Invalid Task");
-    else if (action === "close")
-        Formulary.close();
-});
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -313,3 +241,83 @@ var Translator;
         });
     }); };
 })(Translator || (Translator = {}));
+var TaskDesk;
+(function (TaskDesk) {
+    TaskDesk.modal = document.getElementById("modal");
+    TaskDesk.name = document.getElementById("task-desk-title");
+    TaskDesk.description = document.getElementById("task-desk-content");
+    TaskDesk.remove = document.getElementById("remove");
+    TaskDesk.close = document.getElementById("close-modal");
+})(TaskDesk || (TaskDesk = {}));
+var Task = (function () {
+    function Task(_a) {
+        var name = _a.name, color = _a.color, description = _a.description, id = _a.id;
+        Task.tasks.push({ name: name, color: color, description: description, id: id });
+        Task.__oncreate({ name: name, color: color, description: description, id: id });
+        Formulary.close();
+        Task.save();
+    }
+    Task.build = function (_a) {
+        var name = _a.name, color = _a.color, description = _a.description;
+        var task = this.createNodeWithClass("div", "task");
+        var head = this.createNodeWithClass("div", "task__head");
+        var body = this.createNodeWithClass("div", "task__body");
+        task.appendChild(head);
+        task.appendChild(body);
+        head.textContent = name;
+        body.innerHTML = description;
+        task.style.borderColor = color;
+        head.style.borderBottomColor = color;
+        task.style.boxShadow = "0 0 10px " + color;
+        return task;
+    };
+    Task.createNodeWithClass = function (tagName, className) {
+        var node = document.createElement(tagName);
+        node.classList.add(className);
+        return node;
+    };
+    Task.remove = function (name) {
+        this.tasks.splice(this.findIndex(name), 1);
+        this.save();
+    };
+    Task.findIndex = function (key) {
+        return this.tasks.findIndex(function (_a) {
+            var name = _a.name;
+            return name === key;
+        });
+    };
+    Task.save = function () {
+        localStorage.setItem("TaskStore", JSON.stringify(this.tasks));
+    };
+    Object.defineProperty(Task, "onCreate", {
+        set: function (fn) {
+            this.__oncreate = fn;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Task.__oncreate = function (task) { };
+    Task.tasks = JSON.parse(localStorage.getItem("TaskStore") || "[]");
+    return Task;
+}());
+Formulary.form.addEventListener("click", function (e) {
+    e.preventDefault();
+    var action = e.target.dataset.action;
+    if (action === "create" && Formulary.isValidForm())
+        new Task({
+            name: Formulary.name.value,
+            color: Formulary.color.value,
+            id: new Date().getTime().toString(),
+            description: Formulary.description.value,
+        });
+    else if (action === "ceate" && !Formulary.isValidForm())
+        alert("Invalid Task");
+    else if (action === "close")
+        Formulary.close();
+});
+var Interface;
+(function (Interface) {
+    Interface.application = document.getElementById("app");
+    Interface.taskActivator = document.getElementById("activator");
+    Interface.taskContainer = document.getElementById("container");
+})(Interface || (Interface = {}));

@@ -1,4 +1,7 @@
+///<reference path="visual/display-adapter.ts"/>
+
 const main = () => {
+    let delay = 0;
     const fragment = document.createDocumentFragment();
     const optionFragment = document.createDocumentFragment();
 
@@ -6,29 +9,36 @@ const main = () => {
         Formulary.modal.classList.remove("hide");
     });
 
-    const createTask = (taskObject: Task) => {
+    const createTask = (__task: Task) => {
         const block = document.createElement("div");
-        const task = Task.build(taskObject);
+        const { id, name, description } = __task;
+        const task = Task.build(__task);
 
         block.classList.add("block");
         block.appendChild(task);
 
-        block.id = taskObject.name;
+        block.id = id;
+        block.style.position = "relative";
+        block.style.right = "100%";
+        block.style.animation = "Task 1s 1 forwards";
+        block.style.animationDelay = `${delay}s`;
 
         block.addEventListener("click", () => {
             TaskDesk.modal.classList.remove("hide");
-            TaskDesk.name.textContent = taskObject.name;
-            TaskDesk.name.dataset.key = taskObject.name;
-            TaskDesk.description.innerHTML = taskObject.description;
+            TaskDesk.name.textContent = name;
+            TaskDesk.name.dataset.key = id;
+            TaskDesk.description.innerHTML = description;
         });
+
+        delay += 0.25;
 
         return block;
     };
 
-    const createOption = ({ name, description }: Task) => {
+    const createOption = ({ id, name, description }: Task) => {
         const option = document.createElement("option");
         option.textContent = description;
-        option.id = `__${name}`;
+        option.id = `$${id}`;
         option.value = name;
         return option;
     };
@@ -42,8 +52,8 @@ const main = () => {
         const key = TaskDesk.name.dataset.key as string;
 
         Task.remove(key);
+        document.getElementById(`$${key}`)?.remove();
         document.getElementById(key)?.remove();
-        document.getElementById(`__${key}`)?.remove();
         TaskDesk.close.click();
     });
 

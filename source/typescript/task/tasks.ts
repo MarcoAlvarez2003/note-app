@@ -1,4 +1,5 @@
 interface Task {
+    id: string;
     name: string;
     color: string;
     description: string;
@@ -8,9 +9,9 @@ class Task {
     protected static __oncreate = (task: Task) => {};
     public static tasks: Task[] = JSON.parse(localStorage.getItem("TaskStore") || "[]");
 
-    constructor({ name, color, description }: Task) {
-        Task.tasks.push({ name, color, description });
-        Task.__oncreate({ name, color, description });
+    constructor({ name, color, description, id }: Task) {
+        Task.tasks.push({ name, color, description, id });
+        Task.__oncreate({ name, color, description, id });
         Formulary.close();
         Task.save();
     }
@@ -63,6 +64,7 @@ Formulary.form.addEventListener("click", (e) => {
         new Task({
             name: Formulary.name.value,
             color: Formulary.color.value,
+            id: new Date().getTime().toString(),
             description: Formulary.description.value,
         });
     else if (action === "ceate" && !Formulary.isValidForm()) alert("Invalid Task");
