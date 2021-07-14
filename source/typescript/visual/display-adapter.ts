@@ -1,5 +1,5 @@
-namespace DisplayAdapter {
-    export const adapt = () => {
-        document.body.style.height = `${window.innerHeight}px`;
-    };
+class DisplayAdapter {
+    public static adapt() {
+        document.body.style.height = `${innerHeight}px`;
+    }
 }

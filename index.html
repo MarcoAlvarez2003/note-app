@@ -4,8 +4,9 @@
         <meta charset="UTF-8" />
         <link rel="stylesheet" href="source/styles/index.css" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <link rel="icon" href="source/assets/icon.ico" type="image/png" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title class="traductor" data-keyname="app_title">Notes</title>
+        <title class="translatable" data-key="appName">Notes</title>
     </head>
     <body>
         <!-- Modals -->
@@ -20,9 +21,9 @@
                         spellcheck="off"
                         list="task-names"
                         autocomplete="off"
-                        data-keyname="form_name_placeholder"
+                        data-key="formNamePlace"
                         placeholder="Write name for this task"
-                        class="form__input form__input--dark traductor"
+                        class="form__input form__input--dark translatable"
                     />
                 </div>
 
@@ -30,8 +31,8 @@
                     <textarea
                         spellcheck="off"
                         id="description"
-                        data-keyname="form_description_placeholder"
-                        class="form__area form__area--dark traductor"
+                        data-key="formDescriptionPlace"
+                        class="form__area form__area--dark translatable"
                         placeholder="Write instructions for this task"
                     ></textarea>
                 </div>
@@ -42,8 +43,8 @@
                         type="text"
                         spellcheck="off"
                         placeholder="Color"
-                        data-keyname="form_color_placeholder"
-                        class="form__input--dark form__input--color traductor"
+                        data-key="formColorPlace"
+                        class="form__input--dark form__input--color translatable"
                     />
                 </div>
 
@@ -51,16 +52,16 @@
                     <button
                         type="button"
                         data-action="create"
-                        data-keyname="form_create_button"
-                        class="form__button form__button--dark traductor"
+                        data-key="formCreateButton"
+                        class="form__button form__button--dark translatable"
                     >
                         Create
                     </button>
                     <button
                         type="button"
                         data-action="close"
-                        data-keyname="form_close_button"
-                        class="form__button form__button--dark traductor"
+                        data-key="formCloseButton"
+                        class="form__button form__button--dark translatable"
                     >
                         Close
                     </button>
@@ -76,22 +77,22 @@
                 </div>
                 <div class="task-desk__body">
                     <p class="task-desk__paragraph" id="task-desk-content">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam quisquam neque expedita nam,
-                        eaque delectus omnis accusamus beatae aspernatur iste distinctio ipsam officia vero in voluptas
-                        possimus minus! Cumque, adipisci.
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam quisquam
+                        neque expedita nam, eaque delectus omnis accusamus beatae aspernatur iste
+                        distinctio ipsam officia vero in voluptas possimus minus! Cumque, adipisci.
                     </p>
                 </div>
                 <div class="task-desk__controlbox">
                     <button
-                        class="form__button form__button--dark traductor"
-                        data-keyname="modal_remove_button"
+                        class="form__button form__button--dark translatable"
+                        data-key="modalRemoveButton"
                         id="remove"
                     >
                         Remove
                     </button>
                     <button
-                        class="form__button form__button--dark traductor"
-                        data-keyname="modal_close_button"
+                        class="form__button form__button--dark translatable"
+                        data-key="modalCloseButton"
                         id="close-modal"
                     >
                         Back
@@ -105,7 +106,7 @@
         <!-- App -->
         <div id="app" class="app">
             <header class="app__head">
-                <h1 id="reset-lang" class="app__title traductor" data-keyname="app_title">Notes</h1>
+                <h1 id="app-title" class="app__title translatable" data-key="appName">Notes</h1>
             </header>
             <main id="container" class="app__body">
                 <div class="block" id="activator">

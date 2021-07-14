@@ -1,69 +1,89 @@
-namespace Translator {
-    interface ObjectTranslator {
-        [name: string]: Translation;
-    }
+interface TranslationObject {
+    en: Traduction;
+    es: Traduction;
+}
 
-    interface Translation {
-        app_title: string;
-        form_name_placeholder: string;
-        form_description_placeholder: string;
-        form_year_placeholder: string;
-        form_month_placeholder: string;
-        form_day_placeholder: string;
-        form_color_placeholder: string;
-        form_create_button: string;
-        form_close_button: string;
-        modal_remove_button: string;
-        modal_close_button: string;
-    }
+interface Traduction {
+    appName: string;
+    formNamePlace: string;
+    formDescriptionPlace: string;
+    formColorPlace: string;
+    formCreateButton: string;
+    formCloseButton: string;
+    modalRemoveButton: string;
+    modalCloseButton: string;
+}
 
-    document.getElementById("reset-lang")?.addEventListener("dblclick", async () => {
-        localStorage.removeItem("@notes/lang");
-        await translate();
-    });
+type Languages = keyof TranslationObject;
 
-    const getDefaultLanguage = () => {
-        let language = localStorage.getItem("@notes/lang");
-        return language
-            ? language
-            : isValidLanguage(prompt("what is your language / cual es tu idioma", "en") as string);
+type TraductionKey = keyof Traduction;
+
+class Translator {
+    private static __translations: TranslationObject = {
+        en: {
+            appName: "Notes",
+            formNamePlace: "Write a name for the task",
+            formDescriptionPlace: "Write a description for the task",
+            formColorPlace: "Color",
+            formCreateButton: "Create",
+            formCloseButton: "Close",
+            modalRemoveButton: "Remove",
+            modalCloseButton: "Close",
+        },
+        es: {
+            appName: "Notas",
+            formNamePlace: "Escribe un nombre para la tarea",
+            formDescriptionPlace: "Escribe una descripcion para la tarea",
+            formColorPlace: "Color",
+            formCreateButton: "Crear",
+            formCloseButton: "Cerrar",
+            modalRemoveButton: "Remover",
+            modalCloseButton: "Cerrar",
+        },
     };
 
-    const isValidLanguage = (lang: string): string => {
-        while (!/(es|en)/.test(lang)) {
-            lang = prompt("what is your language / cual es tu idioma", "en") as string;
+    public static translate(): void {
+        const lang = this.lang === "es" ? "es" : "en";
+        this.translateTo(lang);
+    }
+
+    public static translateTo(lang: Languages): void {
+        const traduction = this.__translations[lang];
+        for (const node of this.translatableNodes) {
+            const key = node.dataset.key as TraductionKey;
+            this.isInputOrTextArea(node)
+                ? (node.placeholder = traduction[key])
+                : (node.textContent = traduction[key]);
         }
+        this.translateHTML(lang);
+    }
+
+    public static get lang(): Languages {
+        const lang = localStorage.getItem("@notes/lang") as Languages;
+        return lang ? lang : this.requestLanguage();
+    }
+
+    protected static requestLanguage(): Languages {
+        const lang = navigator.language.split("-")[0] as Languages;
+        return this.saveLang(lang || "en");
+    }
+
+    protected static saveLang(lang: Languages): Languages {
         localStorage.setItem("@notes/lang", lang);
         return lang;
-    };
+    }
 
-    const getFile = async (): Promise<ObjectTranslator> => {
-        const text = localStorage.getItem("@notes/translation");
-        return text ? JSON.parse(text) : await readFile("./source/assets/translations.json");
-    };
+    protected static get translatableNodes(): HTMLElement[] {
+        const nodes = document.getElementsByClassName("translatable");
+        return Array.from(nodes) as HTMLElement[];
+    }
 
-    const readFile = async (path: string) => {
-        const request = await fetch(path);
-        const text = await request.text();
-        saveFile(text);
+    protected static isInputOrTextArea(node: any): node is HTMLInputElement {
+        return node instanceof HTMLInputElement || node instanceof HTMLTextAreaElement;
+    }
 
-        return JSON.parse(text);
-    };
-
-    const saveFile = async (data: string) => {
-        localStorage.setItem("@notes/translation", data);
-    };
-
-    export const translate = async () => {
-        const lang = getDefaultLanguage();
-        const translations = await getFile();
-
-        const translation = translations[lang];
-        const nodes = Array.from(document.getElementsByClassName("traductor")) as HTMLElement[];
-        for (const node of nodes) {
-            const traduction = translation[node.dataset.keyname as keyof Translation];
-            if ("placeholder" in node) (node as HTMLInputElement).placeholder = traduction;
-            else node.textContent = traduction;
-        }
-    };
+    protected static translateHTML(lang: Languages) {
+        const html = document.lastChild as HTMLElement;
+        if (html) html.lang = lang;
+    }
 }
