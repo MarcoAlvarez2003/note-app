@@ -223,6 +223,12 @@ body {
     padding: 10px;
 }
 
+.block--container {
+    animation: Task 1s 1 forwards;
+    position: relative;
+    right: 100%;
+}
+
 .hide {
     display: none;
 }

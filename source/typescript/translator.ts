@@ -18,7 +18,13 @@ type Languages = keyof TranslationObject;
 
 type TraductionKey = keyof Traduction;
 
+/**
+ * Allows the translation of the page
+ */
 class Translator {
+    /**
+     * Warehouse with all available translations
+     */
     private static __translations: TranslationObject = {
         en: {
             appName: "Notes",
@@ -41,12 +47,17 @@ class Translator {
             modalCloseButton: "Cerrar",
         },
     };
-
+    /**
+     * translate the page automatically
+     */
     public static translate(): void {
         const lang = this.lang === "es" ? "es" : "en";
         this.translateTo(lang);
     }
-
+    /**
+     * Translate the page into a language that is available
+     * @param lang Language to translate
+     */
     public static translateTo(lang: Languages): void {
         const traduction = this.__translations[lang];
         for (const node of this.translatableNodes) {
@@ -57,26 +68,40 @@ class Translator {
         }
         this.translateHTML(lang);
     }
-
+    /**
+     * get browser language
+     */
     public static get lang(): Languages {
         const lang = localStorage.getItem("@notes/lang") as Languages;
         return lang ? lang : this.requestLanguage();
     }
-
+    /**
+     * makes a language request to the browser
+     * @returns returns the browser language
+     */
     protected static requestLanguage(): Languages {
         const lang = navigator.language.split("-")[0] as Languages;
         return lang;
     }
-
+    /**
+     * find all translatable nodes
+     */
     protected static get translatableNodes(): HTMLElement[] {
         const nodes = document.getElementsByClassName("translatable");
         return Array.from(nodes) as HTMLElement[];
     }
-
+    /**
+     * check if the element is an **_HTMLInputElement_** or an **_HTMLTextAreaElement_**
+     * @param node node to verify
+     * @returns returns if the node is an **_HTMLInputElement_** or an **_HTMLTextAreaElemen_*t*
+     */
     protected static isInputOrTextArea(node: any): node is HTMLInputElement {
         return node instanceof HTMLInputElement || node instanceof HTMLTextAreaElement;
     }
-
+    /**
+     * notifies the browser of the page language
+     * @param lang Language to translate
+     */
     protected static translateHTML(lang: Languages) {
         const html = document.lastChild as HTMLElement;
         if (html) html.lang = lang;

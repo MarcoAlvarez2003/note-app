@@ -29,33 +29,33 @@ var DisplayAdapter = (function () {
     };
     return DisplayAdapter;
 }());
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
+};
 var main = function () {
-    var delay = 0;
-    var fragment = document.createDocumentFragment();
+    var fragment = Note.createArrayOfTasks.apply(Note, __spreadArray([], __read(Task.tasks)));
     var optionFragment = document.createDocumentFragment();
     Interface.taskActivator.addEventListener("click", function () {
         Formulary.modal.classList.remove("hide");
     });
-    var createTask = function (__task) {
-        var block = document.createElement("div");
-        var id = __task.id, name = __task.name, description = __task.description;
-        var task = Task.build(__task);
-        block.classList.add("block");
-        block.appendChild(task);
-        block.id = id;
-        block.style.position = "relative";
-        block.style.right = "100%";
-        block.style.animation = "Task 1s 1 forwards";
-        block.style.animationDelay = delay + "s";
-        block.addEventListener("click", function () {
-            TaskDesk.modal.classList.remove("hide");
-            TaskDesk.name.textContent = name;
-            TaskDesk.name.dataset.key = id;
-            TaskDesk.description.innerHTML = description;
-        });
-        delay += 0.25;
-        return block;
-    };
     var createOption = function (_a) {
         var id = _a.id, name = _a.name, description = _a.description;
         var option = document.createElement("option");
@@ -64,10 +64,6 @@ var main = function () {
         option.value = name;
         return option;
     };
-    Task.tasks.forEach(function (task) {
-        fragment.appendChild(createTask(task));
-        optionFragment.appendChild(createOption(task));
-    });
     TaskDesk.remove.addEventListener("click", function () {
         var _a, _b;
         var key = TaskDesk.name.dataset.key;
@@ -83,7 +79,7 @@ var main = function () {
         TaskDesk.description.textContent = "";
     });
     Task.onCreate = function (task) {
-        Interface.taskContainer.appendChild(createTask(task));
+        Interface.taskContainer.appendChild(new Note(task).task);
         Formulary.listNames.appendChild(createOption(task));
     };
     Interface.taskContainer.appendChild(fragment);
@@ -185,6 +181,63 @@ var Translator = (function () {
         },
     };
     return Translator;
+}());
+var Note = (function () {
+    function Note(task) {
+        var _this = this;
+        this.container = document.createElement("div");
+        this.information = task;
+        this.container.addEventListener("click", function () { return _this.show(task); });
+    }
+    Note.prototype.build = function () {
+        this.container.appendChild(Task.build(this.information));
+        this.container.id = this.information.id;
+        this.setContainerStyles();
+    };
+    Note.prototype.show = function (self) {
+        TaskDesk.modal.classList.remove("hide");
+        TaskDesk.name.dataset.key = self.id;
+        TaskDesk.name.textContent = self.name;
+        TaskDesk.description.innerHTML = self.description;
+    };
+    Note.prototype.setContainerStyles = function () {
+        this.container.classList.add("block", "block--container");
+        this.container.style.animationDelay = Note.delay + "s";
+    };
+    Object.defineProperty(Note.prototype, "task", {
+        get: function () {
+            this.build();
+            return this.container;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Note.createArrayOfTasks = function () {
+        var e_2, _a;
+        var tasks = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            tasks[_i] = arguments[_i];
+        }
+        var fragment = document.createDocumentFragment();
+        try {
+            for (var tasks_1 = __values(tasks), tasks_1_1 = tasks_1.next(); !tasks_1_1.done; tasks_1_1 = tasks_1.next()) {
+                var task = tasks_1_1.value;
+                fragment.appendChild(new Note(task).task);
+                this.delay += 0.25;
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (tasks_1_1 && !tasks_1_1.done && (_a = tasks_1.return)) _a.call(tasks_1);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        this.delay = 0;
+        return fragment;
+    };
+    Note.delay = 0;
+    return Note;
 }());
 var TaskDesk;
 (function (TaskDesk) {
