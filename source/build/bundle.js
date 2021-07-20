@@ -57,6 +57,9 @@ addEventListener("load", function () {
     main();
 });
 addEventListener("resize", DisplayAdapter.adapt, false);
+!localStorage.getItem("restared")
+    ? (localStorage.clear(), localStorage.setItem("restared", "true"))
+    : console.log("this version has updated");
 var __values = (this && this.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) return m.call(o);

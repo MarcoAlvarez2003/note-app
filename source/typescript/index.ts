@@ -35,3 +35,7 @@ addEventListener("load", () => {
 });
 
 addEventListener("resize", DisplayAdapter.adapt, false);
+
+!localStorage.getItem("restared")
+    ? (localStorage.clear(), localStorage.setItem("restared", "true"))
+    : console.log("this version has updated");
