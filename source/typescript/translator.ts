@@ -7,7 +7,11 @@ interface Traduction {
     appName: string;
     formNamePlace: string;
     formDescriptionPlace: string;
-    formColorPlace: string;
+    formBorderColorPlace: string;
+    formTextColorPlace: string;
+    formYearPlace: string;
+    formMonthPlace: string;
+    formDayPlace: string;
     formCreateButton: string;
     formCloseButton: string;
     modalRemoveButton: string;
@@ -28,9 +32,13 @@ class Translator {
     private static __translations: TranslationObject = {
         en: {
             appName: "Notes",
-            formNamePlace: "Write a name for the task",
+            formNamePlace: "Name of task",
             formDescriptionPlace: "Write a description for the task",
-            formColorPlace: "Color",
+            formBorderColorPlace: "Border color",
+            formTextColorPlace: "Text color",
+            formYearPlace: "Year",
+            formMonthPlace: "Month",
+            formDayPlace: "Day",
             formCreateButton: "Create",
             formCloseButton: "Close",
             modalRemoveButton: "Remove",
@@ -38,9 +46,13 @@ class Translator {
         },
         es: {
             appName: "Notas",
-            formNamePlace: "Escribe un nombre para la tarea",
+            formNamePlace: "Nombre de la tarea",
             formDescriptionPlace: "Escribe una descripcion para la tarea",
-            formColorPlace: "Color",
+            formBorderColorPlace: "Color del borde",
+            formTextColorPlace: "Color del texto",
+            formYearPlace: "Año",
+            formMonthPlace: "Mes",
+            formDayPlace: "Día",
             formCreateButton: "Crear",
             formCloseButton: "Cerrar",
             modalRemoveButton: "Remover",

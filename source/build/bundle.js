@@ -1,26 +1,4 @@
 "use strict";
-var Formulary;
-(function (Formulary) {
-    Formulary.form = document.getElementById("form");
-    Formulary.modal = document.getElementById("form-modal");
-    Formulary.listNames = document.getElementById("task-names");
-    Formulary.name = document.getElementById("name");
-    Formulary.description = document.getElementById("description");
-    Formulary.color = document.getElementById("color");
-    Formulary.reset = function () {
-        Formulary.form.reset();
-    };
-    var showFinalColor = function () {
-        Formulary.color.style.color = Formulary.color.value;
-    };
-    Formulary.isValidForm = function () { return !!Formulary.name.value && !!Formulary.description.value; };
-    Formulary.color.addEventListener("input", showFinalColor, false);
-    Formulary.close = function () {
-        Formulary.modal.classList.add("hide");
-        Formulary.reset();
-    };
-    Formulary.reset();
-})(Formulary || (Formulary = {}));
 var DisplayAdapter = (function () {
     function DisplayAdapter() {
     }
@@ -52,25 +30,15 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
 };
 var main = function () {
     var fragment = Note.createArrayOfTasks.apply(Note, __spreadArray([], __read(Task.tasks)));
-    var optionFragment = document.createDocumentFragment();
     Interface.taskActivator.addEventListener("click", function () {
-        Formulary.modal.classList.remove("hide");
+        Form.show();
     });
-    var createOption = function (_a) {
-        var id = _a.id, name = _a.name, description = _a.description;
-        var option = document.createElement("option");
-        option.textContent = description;
-        option.id = "$" + id;
-        option.value = name;
-        return option;
-    };
     TaskDesk.remove.addEventListener("click", function () {
-        var _a, _b;
+        var _a;
         var key = TaskDesk.name.dataset.key;
-        Task.remove(key);
-        (_a = document.getElementById("$" + key)) === null || _a === void 0 ? void 0 : _a.remove();
-        (_b = document.getElementById(key)) === null || _b === void 0 ? void 0 : _b.remove();
+        (_a = document.getElementById(key)) === null || _a === void 0 ? void 0 : _a.remove();
         TaskDesk.close.click();
+        Task.remove(key);
     });
     TaskDesk.close.addEventListener("click", function () {
         TaskDesk.modal.classList.add("hide");
@@ -80,10 +48,8 @@ var main = function () {
     });
     Task.onCreate = function (task) {
         Interface.taskContainer.appendChild(new Note(task).task);
-        Formulary.listNames.appendChild(createOption(task));
     };
     Interface.taskContainer.appendChild(fragment);
-    Formulary.listNames.appendChild(optionFragment);
 };
 addEventListener("load", function () {
     DisplayAdapter.adapt();
@@ -161,9 +127,13 @@ var Translator = (function () {
     Translator.__translations = {
         en: {
             appName: "Notes",
-            formNamePlace: "Write a name for the task",
+            formNamePlace: "Name of task",
             formDescriptionPlace: "Write a description for the task",
-            formColorPlace: "Color",
+            formBorderColorPlace: "Border color",
+            formTextColorPlace: "Text color",
+            formYearPlace: "Year",
+            formMonthPlace: "Month",
+            formDayPlace: "Day",
             formCreateButton: "Create",
             formCloseButton: "Close",
             modalRemoveButton: "Remove",
@@ -171,9 +141,13 @@ var Translator = (function () {
         },
         es: {
             appName: "Notas",
-            formNamePlace: "Escribe un nombre para la tarea",
+            formNamePlace: "Nombre de la tarea",
             formDescriptionPlace: "Escribe una descripcion para la tarea",
-            formColorPlace: "Color",
+            formBorderColorPlace: "Color del borde",
+            formTextColorPlace: "Color del texto",
+            formYearPlace: "Año",
+            formMonthPlace: "Mes",
+            formDayPlace: "Día",
             formCreateButton: "Crear",
             formCloseButton: "Cerrar",
             modalRemoveButton: "Remover",
@@ -182,6 +156,150 @@ var Translator = (function () {
     };
     return Translator;
 }());
+var DateParser = (function () {
+    function DateParser() {
+    }
+    DateParser.parseYear = function (year) {
+        var currentYear = new Date().getFullYear();
+        return this.checkDate(currentYear, year);
+    };
+    DateParser.parseMonth = function (month) {
+        var currentMonth = new Date().getMonth();
+        return this.checkDate(currentMonth, month);
+    };
+    DateParser.parseDay = function (day) {
+        var currentDay = new Date().getDate();
+        return this.checkDate(currentDay, day);
+    };
+    DateParser.checkDate = function (current, recived) {
+        return !Number.isNaN(recived) && recived >= current ? recived : current;
+    };
+    return DateParser;
+}());
+var FormValidator = (function () {
+    function FormValidator() {
+    }
+    FormValidator.isValid = function (_a) {
+        var name = _a.name, description = _a.content;
+        return !!name && !!description;
+    };
+    return FormValidator;
+}());
+var Form;
+(function (Form) {
+    Form.onsubmit = function (task) { };
+    var form = document.getElementById("form");
+    var modal = document.getElementById("form-modal");
+    var borderColorInput = document.getElementById("form-color");
+    var textColorInput = document.getElementById("form-text-color");
+    var Data = (function () {
+        function Data() {
+        }
+        Object.defineProperty(Data, "id", {
+            get: function () {
+                return new Date().getTime().toString();
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Data, "title", {
+            get: function () {
+                return document.getElementById("form-name").value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Data, "content", {
+            get: function () {
+                return this.body.value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Data, "year", {
+            get: function () {
+                var year = document.getElementById("form-year").value;
+                return DateParser.parseYear(parseInt(year));
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Data, "month", {
+            get: function () {
+                var month = document.getElementById("form-month").value;
+                return DateParser.parseMonth(parseInt(month));
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Data, "day", {
+            get: function () {
+                var day = document.getElementById("form-day").value;
+                return DateParser.parseDay(parseInt(day));
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Data, "borderColor", {
+            get: function () {
+                return borderColorInput.value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Data, "textColor", {
+            get: function () {
+                return textColorInput.value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Data, "task", {
+            get: function () {
+                return {
+                    id: this.id,
+                    name: this.title,
+                    content: this.content,
+                    color: {
+                        text: this.textColor,
+                        border: this.borderColor,
+                    },
+                    date: {
+                        year: this.year,
+                        month: this.month,
+                        day: this.day,
+                    },
+                };
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Data.body = document.getElementById("form-content");
+        return Data;
+    }());
+    var invalid = function () { return alert("this task is invali"); };
+    var showFinalColor = function (e) {
+        var input = e.target;
+        input.style.color = input.value;
+    };
+    Form.hide = function () { return modal.classList.add("hide"); };
+    Form.show = function () { return modal.classList.remove("hide"); };
+    Form.reset = function () { return form.reset(); };
+    Form.close = function () { return (Form.hide(), Form.reset()); };
+    form.addEventListener("click", function (e) {
+        e.preventDefault();
+        var action = e.target.dataset.action;
+        action === "create"
+            ? FormValidator.isValid(Data.task)
+                ? Form.onsubmit(Data.task)
+                : invalid()
+            : action === "close"
+                ? Form.close()
+                : false;
+    });
+    textColorInput.addEventListener("input", showFinalColor);
+    borderColorInput.addEventListener("input", showFinalColor);
+})(Form || (Form = {}));
 var Note = (function () {
     function Note(task) {
         var _this = this;
@@ -198,7 +316,7 @@ var Note = (function () {
         TaskDesk.modal.classList.remove("hide");
         TaskDesk.name.dataset.key = self.id;
         TaskDesk.name.textContent = self.name;
-        TaskDesk.description.innerHTML = self.description;
+        TaskDesk.description.innerHTML = self.content;
     };
     Note.prototype.setContainerStyles = function () {
         this.container.classList.add("block", "block--container");
@@ -248,25 +366,27 @@ var TaskDesk;
     TaskDesk.close = document.getElementById("close-modal");
 })(TaskDesk || (TaskDesk = {}));
 var Task = (function () {
-    function Task(_a) {
-        var name = _a.name, color = _a.color, description = _a.description, id = _a.id;
-        Task.tasks.push({ name: name, color: color, description: description, id: id });
-        Task.__oncreate({ name: name, color: color, description: description, id: id });
-        Formulary.close();
+    function Task(task) {
+        Task.tasks.push(task);
+        Task.__oncreate(task);
+        Form.close();
         Task.save();
     }
     Task.build = function (_a) {
-        var name = _a.name, color = _a.color, description = _a.description;
+        var name = _a.name, color = _a.color, date = _a.date, description = _a.content;
+        var border = color.border, text = color.text;
+        var day = date.day, month = date.month, year = date.year;
         var task = this.createNodeWithClass("div", "task");
         var head = this.createNodeWithClass("div", "task__head");
         var body = this.createNodeWithClass("div", "task__body");
         task.appendChild(head);
         task.appendChild(body);
-        head.textContent = name;
         body.innerHTML = description;
-        task.style.borderColor = color;
-        head.style.borderBottomColor = color;
-        task.style.boxShadow = "0 0 10px " + color;
+        head.innerHTML = name + " - <i style=\"color:" + text + "\">[ " + year + " / " + month + " / " + day + " ]</i>";
+        body.style.color = text;
+        task.style.borderColor = border;
+        head.style.borderBottomColor = border;
+        task.style.boxShadow = "0 0 10px " + border;
         return task;
     };
     Task.createNodeWithClass = function (tagName, className) {
@@ -298,21 +418,10 @@ var Task = (function () {
     Task.tasks = JSON.parse(localStorage.getItem("TaskStore") || "[]");
     return Task;
 }());
-Formulary.form.addEventListener("click", function (e) {
-    e.preventDefault();
-    var action = e.target.dataset.action;
-    if (action === "create" && Formulary.isValidForm())
-        new Task({
-            name: Formulary.name.value,
-            color: Formulary.color.value,
-            id: new Date().getTime().toString(),
-            description: Formulary.description.value,
-        });
-    else if (action === "ceate" && !Formulary.isValidForm())
-        alert("Invalid Task");
-    else if (action === "close")
-        Formulary.close();
-});
+Form.onsubmit = function (task) {
+    task.content = task.content.replace(/(\n)/g, "br>");
+    new Task(task);
+};
 var Interface = (function () {
     function Interface() {
     }

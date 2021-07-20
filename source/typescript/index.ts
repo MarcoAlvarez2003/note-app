@@ -2,27 +2,16 @@
 
 const main = () => {
     const fragment = Note.createArrayOfTasks(...Task.tasks);
-    const optionFragment = document.createDocumentFragment();
 
     Interface.taskActivator.addEventListener("click", () => {
-        Formulary.modal.classList.remove("hide");
+        Form.show();
     });
-
-    const createOption = ({ id, name, description }: Task) => {
-        const option = document.createElement("option");
-        option.textContent = description;
-        option.id = `$${id}`;
-        option.value = name;
-        return option;
-    };
 
     TaskDesk.remove.addEventListener("click", () => {
         const key = TaskDesk.name.dataset.key as string;
-
-        Task.remove(key);
-        document.getElementById(`$${key}`)?.remove();
         document.getElementById(key)?.remove();
         TaskDesk.close.click();
+        Task.remove(key);
     });
 
     TaskDesk.close.addEventListener("click", () => {
@@ -34,11 +23,9 @@ const main = () => {
 
     Task.onCreate = (task) => {
         Interface.taskContainer.appendChild(new Note(task).task);
-        Formulary.listNames.appendChild(createOption(task));
     };
 
     Interface.taskContainer.appendChild(fragment);
-    Formulary.listNames.appendChild(optionFragment);
 };
 
 addEventListener("load", () => {

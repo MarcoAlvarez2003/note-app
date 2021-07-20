@@ -146,6 +146,14 @@ body {
     max-width: 600px;
 }
 
+.margin-left {
+    margin-left: 5px;
+}
+
+.margin-right {
+    margin-right: 5px;
+}
+
 .form__block--flex {
     display: flex;
     align-items: center;
@@ -183,7 +191,7 @@ body {
 .form__button {
     width: 48%;
     height: 90%;
-    padding: 10px;
+    padding: 20px;
     border-radius: 10px;
     border: 2px solid #fff;
     outline: 0 solid transparent;
@@ -192,7 +200,6 @@ body {
 .form__button--dark {
     border: 0;
     color: #eee;
-    padding: 20px;
     background: linear-gradient(to right, #23252655, #41434555);
 }
 
@@ -213,7 +220,7 @@ body {
     height: 100%;
     display: flex;
     justify-content: center;
-    background-color: #000c;
+    background-color: #000e;
     position: absolute;
     left: 0;
     top: 0;

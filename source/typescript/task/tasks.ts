@@ -1,33 +1,51 @@
+///<reference path="../form/form.ts"/>
+
 interface Task {
     id: string;
     name: string;
-    color: string;
-    description: string;
+    content: string;
+    color: ColorInfo;
+    date: DateInfo;
+}
+
+interface ColorInfo {
+    border: string;
+    text: string;
+}
+
+interface DateInfo {
+    year: number;
+    month: number;
+    day: number;
 }
 
 class Task {
     protected static __oncreate = (task: Task) => {};
     public static tasks: Task[] = JSON.parse(localStorage.getItem("TaskStore") || "[]");
 
-    constructor({ name, color, description, id }: Task) {
-        Task.tasks.push({ name, color, description, id });
-        Task.__oncreate({ name, color, description, id });
-        Formulary.close();
+    constructor(task: Task) {
+        Task.tasks.push(task);
+        Task.__oncreate(task);
+        Form.close();
         Task.save();
     }
 
-    public static build({ name, color, description }: Task) {
+    public static build({ name, color, date, content: description }: Task) {
+        const { border, text } = color;
+        const { day, month, year } = date;
         const task = this.createNodeWithClass("div", "task");
         const head = this.createNodeWithClass("div", "task__head");
         const body = this.createNodeWithClass("div", "task__body");
 
         task.appendChild(head);
         task.appendChild(body);
-        head.textContent = name;
         body.innerHTML = description;
-        task.style.borderColor = color;
-        head.style.borderBottomColor = color;
-        task.style.boxShadow = `0 0 10px ${color}`;
+        head.innerHTML = `${name} - <i style="color:${text}">[ ${year} / ${month} / ${day} ]</i>`;
+
+        body.style.color = text;
+        task.style.borderColor = border;
+        head.style.borderBottomColor = border;
+        task.style.boxShadow = `0 0 10px ${border}`;
 
         return task;
     }
@@ -56,17 +74,7 @@ class Task {
     }
 }
 
-Formulary.form.addEventListener("click", (e) => {
-    e.preventDefault();
-    const action = (e.target as HTMLElement).dataset.action as string;
-
-    if (action === "create" && Formulary.isValidForm())
-        new Task({
-            name: Formulary.name.value,
-            color: Formulary.color.value,
-            id: new Date().getTime().toString(),
-            description: Formulary.description.value,
-        });
-    else if (action === "ceate" && !Formulary.isValidForm()) alert("Invalid Task");
-    else if (action === "close") Formulary.close();
-});
+Form.onsubmit = (task) => {
+    task.content = task.content.replace(/(\n)/g, "br>");
+    new Task(task);
+};

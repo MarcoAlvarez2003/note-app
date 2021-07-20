@@ -36,7 +36,7 @@ class Note {
         TaskDesk.modal.classList.remove("hide");
         TaskDesk.name.dataset.key = self.id;
         TaskDesk.name.textContent = self.name;
-        TaskDesk.description.innerHTML = self.description;
+        TaskDesk.description.innerHTML = self.content;
     }
     /**
      * assign the styles for the task

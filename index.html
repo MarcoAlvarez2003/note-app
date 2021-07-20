@@ -14,37 +14,69 @@
         <!-- Form -->
         <div class="modal hide" id="form-modal">
             <form class="form" id="form">
-                <div class="form__block">
+                <div class="form__block form__block--flex">
                     <input
-                        id="name"
                         type="text"
+                        id="form-name"
                         spellcheck="off"
                         list="task-names"
                         autocomplete="off"
                         data-key="formNamePlace"
                         placeholder="Write name for this task"
-                        class="form__input form__input--dark translatable"
+                        class="form__input form__input--dark translatable margin-right"
+                    />
+
+                    <input
+                        type="text"
+                        id="form-color"
+                        spellcheck="off"
+                        placeholder="Border color"
+                        data-key="formBorderColorPlace"
+                        class="form__input--dark form__input--color translatable margin-left"
                     />
                 </div>
 
                 <div class="form__block">
                     <textarea
+                        id="form-content"
                         spellcheck="off"
-                        id="description"
                         data-key="formDescriptionPlace"
+                        placeholder="Write descripcion of this task"
                         class="form__area form__area--dark translatable"
-                        placeholder="Write instructions for this task"
                     ></textarea>
                 </div>
 
                 <div class="form__block form__block--flex">
                     <input
-                        id="color"
                         type="text"
-                        spellcheck="off"
-                        placeholder="Color"
-                        data-key="formColorPlace"
-                        class="form__input--dark form__input--color translatable"
+                        id="form-text-color"
+                        placeholder="Text color"
+                        data-key="formTextColorPlace"
+                        class="form__input form__input--dark translatable"
+                    />
+                </div>
+
+                <div class="form__block form__block--flex">
+                    <input
+                        type="text"
+                        id="form-year"
+                        placeholder="Year"
+                        data-key="formYearPlace"
+                        class="form__input form__input--dark margin-right translatable"
+                    />
+                    <input
+                        type="text"
+                        id="form-month"
+                        placeholder="Month"
+                        data-key="formMonthPlace"
+                        class="form__input form__input--dark margin-right translatable"
+                    />
+                    <input
+                        type="text"
+                        id="form-day"
+                        placeholder="Day"
+                        data-key="formDayPlace"
+                        class="form__input form__input--dark translatable"
                     />
                 </div>
 
