@@ -190,7 +190,6 @@ var FormValidator = (function () {
 }());
 var Form;
 (function (Form) {
-    var _a, _b, _c;
     Form.onsubmit = function (task) { };
     var form = document.getElementById("form");
     var modal = document.getElementById("form-modal");
@@ -287,15 +286,6 @@ var Form;
         var input = e.target;
         input.style.color = input.value;
     };
-    var appendTag = function (e) {
-        var _a;
-        var button = e.target;
-        var tag = (_a = button.textContent) === null || _a === void 0 ? void 0 : _a.trim();
-        var words = Data.body.value.split("");
-        words.splice(++Data.selectionStart, 0, tag);
-        Data.body.value = words.join("");
-        Data.body.focus();
-    };
     Form.hide = function () { return modal.classList.add("hide"); };
     Form.show = function () { return modal.classList.remove("hide"); };
     Form.reset = function () { return form.reset(); };
@@ -314,9 +304,6 @@ var Form;
     textColorInput.addEventListener("input", showFinalColor);
     borderColorInput.addEventListener("input", showFinalColor);
     Data.body.addEventListener("input", function () { return (Data.selectionStart = Data.body.selectionStart); });
-    (_a = document.getElementById("form-bar-tag")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", appendTag);
-    (_b = document.getElementById("form-open-tag")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", appendTag);
-    (_c = document.getElementById("form-close-tag")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", appendTag);
 })(Form || (Form = {}));
 var Note = (function () {
     function Note(task) {
@@ -382,6 +369,23 @@ var TaskDesk;
     TaskDesk.description = document.getElementById("task-desk-content");
     TaskDesk.remove = document.getElementById("remove");
     TaskDesk.close = document.getElementById("close-modal");
+    TaskDesk.description.addEventListener("dblclick", function () {
+        TaskDesk.description.contentEditable = "true";
+    });
+    TaskDesk.close.addEventListener("click", function () {
+        var _a;
+        TaskDesk.description.focus();
+        var id = (_a = TaskDesk.name.textContent) === null || _a === void 0 ? void 0 : _a.trim();
+        var index = Task.findIndex(id);
+        Task.tasks[index].content = TaskDesk.description.innerHTML;
+        modifyContent(TaskDesk.name.dataset.key, TaskDesk.description.innerHTML);
+        TaskDesk.description.contentEditable = "false";
+        Task.save();
+    });
+    var modifyContent = function (id, content) {
+        var node = document.getElementById(id);
+        node.children[0].children[1].innerHTML = content;
+    };
 })(TaskDesk || (TaskDesk = {}));
 var Task = (function () {
     function Task(task) {

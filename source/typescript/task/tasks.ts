@@ -61,11 +61,11 @@ class Task {
         this.save();
     }
 
-    protected static findIndex(key: string): number {
+    public static findIndex(key: string): number {
         return this.tasks.findIndex(({ name }) => name === key);
     }
 
-    protected static save(): void {
+    public static save(): void {
         localStorage.setItem("TaskStore", JSON.stringify(this.tasks));
     }
 

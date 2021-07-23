@@ -71,15 +71,6 @@ namespace Form {
         input.style.color = input.value;
     };
 
-    const appendTag = (e: Event): void => {
-        const button = e.target as HTMLButtonElement;
-        const tag = button.textContent?.trim() as string;
-        const words = Data.body.value.split("");
-        words.splice(++Data.selectionStart, 0, tag);
-        Data.body.value = words.join("");
-        Data.body.focus();
-    };
-
     export const hide = () => modal.classList.add("hide");
     export const show = () => modal.classList.remove("hide");
 
@@ -102,8 +93,4 @@ namespace Form {
     textColorInput.addEventListener("input", showFinalColor);
     borderColorInput.addEventListener("input", showFinalColor);
     Data.body.addEventListener("input", () => (Data.selectionStart = Data.body.selectionStart));
-
-    document.getElementById("form-bar-tag")?.addEventListener("click", appendTag);
-    document.getElementById("form-open-tag")?.addEventListener("click", appendTag);
-    document.getElementById("form-close-tag")?.addEventListener("click", appendTag);
 }
