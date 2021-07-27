@@ -25,17 +25,17 @@ namespace Form {
 
         private static get year(): number {
             const year = (document.getElementById("form-year") as HTMLInputElement).value;
-            return DateParser.parseYear(parseInt(year));
+            return DateAnalyzer.Parse.year(parseInt(year));
         }
 
         private static get month(): number {
             const month = (document.getElementById("form-month") as HTMLInputElement).value;
-            return DateParser.parseMonth(parseInt(month));
+            return DateAnalyzer.Parse.month(parseInt(month));
         }
 
         private static get day(): number {
             const day = (document.getElementById("form-day") as HTMLInputElement).value;
-            return DateParser.parseDay(parseInt(day));
+            return DateAnalyzer.Parse.day(parseInt(day));
         }
 
         private static get borderColor(): string {
@@ -64,7 +64,7 @@ namespace Form {
         }
     }
 
-    const invalid = () => alert("this task is invali");
+    const invalid = () => alert("this task is invalid");
 
     const showFinalColor = (e: Event) => {
         const input = e.target as HTMLInputElement;

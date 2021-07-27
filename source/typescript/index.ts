@@ -4,6 +4,7 @@ const main = () => {
     const fragment = Note.createArrayOfTasks(...Task.tasks);
 
     Interface.taskActivator.addEventListener("click", () => {
+        DisplayAdapter.adapt();
         Form.show();
     });
 

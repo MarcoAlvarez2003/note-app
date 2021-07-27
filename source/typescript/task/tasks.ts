@@ -1,4 +1,4 @@
-///<reference path="../form/form.ts"/>
+///<reference path="../form/formulary.ts"/>
 
 interface Task {
     id: string;

@@ -3,8 +3,15 @@ var DisplayAdapter = (function () {
     function DisplayAdapter() {
     }
     DisplayAdapter.adapt = function () {
-        document.body.style.height = innerHeight + "px";
+        document.body.style.height = this.height + "px";
+        this.adaptMeta();
     };
+    DisplayAdapter.adaptMeta = function () {
+        var content = "width=device-width, height=" + this.height + "px, initial-scale=1.0";
+        this.viewport.content = content;
+    };
+    DisplayAdapter.viewport = document.querySelector("meta[name=viewport");
+    DisplayAdapter.height = innerHeight;
     return DisplayAdapter;
 }());
 var __read = (this && this.__read) || function (o, n) {
@@ -31,6 +38,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
 var main = function () {
     var fragment = Note.createArrayOfTasks.apply(Note, __spreadArray([], __read(Task.tasks)));
     Interface.taskActivator.addEventListener("click", function () {
+        DisplayAdapter.adapt();
         Form.show();
     });
     Task.onCreate = function (task) {
@@ -146,35 +154,35 @@ var Translator = (function () {
     };
     return Translator;
 }());
-var DateParser = (function () {
-    function DateParser() {
-    }
-    DateParser.parseYear = function (year) {
-        var currentYear = new Date().getFullYear();
-        return this.checkDate(currentYear, year);
-    };
-    DateParser.parseMonth = function (month) {
-        var currentMonth = new Date().getMonth();
-        return this.checkDate(currentMonth, month);
-    };
-    DateParser.parseDay = function (day) {
-        var currentDay = new Date().getDate();
-        return this.checkDate(currentDay, day);
-    };
-    DateParser.checkDate = function (current, recived) {
-        return !Number.isNaN(recived) && recived >= current ? recived : current;
-    };
-    return DateParser;
-}());
-var FormValidator = (function () {
-    function FormValidator() {
-    }
-    FormValidator.isValid = function (_a) {
-        var name = _a.name, description = _a.content;
-        return !!name && !!description;
-    };
-    return FormValidator;
-}());
+var DateAnalyzer;
+(function (DateAnalyzer) {
+    var Parse = (function () {
+        function Parse() {
+        }
+        Parse.year = function (year) {
+            var currentYear = new Date().getFullYear();
+            return this.parse([currentYear, year, Infinity]);
+        };
+        Parse.month = function (month) {
+            var currentMonth = new Date().getMonth();
+            return this.parse([currentMonth, month, 11]);
+        };
+        Parse.day = function (day) {
+            var currentDay = new Date().getDate();
+            return this.parse([currentDay, day, 30]);
+        };
+        Parse.parse = function (_a) {
+            var _b = __read(_a, 3), current = _b[0], received = _b[1], max = _b[2];
+            return !Number.isNaN(received) && received >= current
+                ? received <= max
+                    ? received
+                    : max
+                : current;
+        };
+        return Parse;
+    }());
+    DateAnalyzer.Parse = Parse;
+})(DateAnalyzer || (DateAnalyzer = {}));
 var Form;
 (function (Form) {
     Form.onsubmit = function (task) { };
@@ -209,7 +217,7 @@ var Form;
         Object.defineProperty(Data, "year", {
             get: function () {
                 var year = document.getElementById("form-year").value;
-                return DateParser.parseYear(parseInt(year));
+                return DateAnalyzer.Parse.year(parseInt(year));
             },
             enumerable: false,
             configurable: true
@@ -217,7 +225,7 @@ var Form;
         Object.defineProperty(Data, "month", {
             get: function () {
                 var month = document.getElementById("form-month").value;
-                return DateParser.parseMonth(parseInt(month));
+                return DateAnalyzer.Parse.month(parseInt(month));
             },
             enumerable: false,
             configurable: true
@@ -225,7 +233,7 @@ var Form;
         Object.defineProperty(Data, "day", {
             get: function () {
                 var day = document.getElementById("form-day").value;
-                return DateParser.parseDay(parseInt(day));
+                return DateAnalyzer.Parse.day(parseInt(day));
             },
             enumerable: false,
             configurable: true
@@ -268,7 +276,7 @@ var Form;
         Data.selectionStart = Data.body.selectionStart;
         return Data;
     }());
-    var invalid = function () { return alert("this task is invali"); };
+    var invalid = function () { return alert("this task is invalid"); };
     var showFinalColor = function (e) {
         var input = e.target;
         input.style.color = input.value;
@@ -292,59 +300,14 @@ var Form;
     borderColorInput.addEventListener("input", showFinalColor);
     Data.body.addEventListener("input", function () { return (Data.selectionStart = Data.body.selectionStart); });
 })(Form || (Form = {}));
-var Note = (function () {
-    function Note(task) {
-        var _this = this;
-        this.container = document.createElement("div");
-        this.information = task;
-        this.container.addEventListener("click", function () { return _this.show(task); });
+var FormValidator = (function () {
+    function FormValidator() {
     }
-    Note.prototype.build = function () {
-        this.container.appendChild(Task.build(this.information));
-        this.container.id = this.information.id;
-        this.setContainerStyles();
+    FormValidator.isValid = function (_a) {
+        var name = _a.name, description = _a.content;
+        return !!name && !!description;
     };
-    Note.prototype.show = function (self) {
-        Desk.Operations.assingTaskToDisplay = self;
-    };
-    Note.prototype.setContainerStyles = function () {
-        this.container.classList.add("block", "block--container");
-        this.container.style.animationDelay = Note.delay + "s";
-    };
-    Object.defineProperty(Note.prototype, "task", {
-        get: function () {
-            this.build();
-            return this.container;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Note.createArrayOfTasks = function () {
-        var e_2, _a;
-        var tasks = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            tasks[_i] = arguments[_i];
-        }
-        var fragment = document.createDocumentFragment();
-        try {
-            for (var tasks_1 = __values(tasks), tasks_1_1 = tasks_1.next(); !tasks_1_1.done; tasks_1_1 = tasks_1.next()) {
-                var task = tasks_1_1.value;
-                fragment.appendChild(new Note(task).task);
-                this.delay += 0.25;
-            }
-        }
-        catch (e_2_1) { e_2 = { error: e_2_1 }; }
-        finally {
-            try {
-                if (tasks_1_1 && !tasks_1_1.done && (_a = tasks_1.return)) _a.call(tasks_1);
-            }
-            finally { if (e_2) throw e_2.error; }
-        }
-        this.delay = 0;
-        return fragment;
-    };
-    Note.delay = 0;
-    return Note;
+    return FormValidator;
 }());
 var Desk;
 (function (Desk) {
@@ -356,7 +319,7 @@ var Desk;
     var Operations = (function () {
         function Operations() {
         }
-        Object.defineProperty(Operations, "assingTaskToDisplay", {
+        Object.defineProperty(Operations, "assignTaskToDisplay", {
             set: function (task) {
                 __title.dataset.taskIdentifier = task.id;
                 __content.innerHTML = task.content;
@@ -398,6 +361,60 @@ var Desk;
     __content.addEventListener("dblclick", edit, false);
     __remove.addEventListener("click", Operations.removeDisplayedTask, false);
 })(Desk || (Desk = {}));
+var Note = (function () {
+    function Note(task) {
+        var _this = this;
+        this.container = document.createElement("div");
+        this.information = task;
+        this.container.addEventListener("click", function () { return _this.show(task); });
+    }
+    Note.prototype.build = function () {
+        this.container.appendChild(Task.build(this.information));
+        this.container.id = this.information.id;
+        this.setContainerStyles();
+    };
+    Note.prototype.show = function (self) {
+        Desk.Operations.assignTaskToDisplay = self;
+    };
+    Note.prototype.setContainerStyles = function () {
+        this.container.classList.add("block", "block--container");
+        this.container.style.animationDelay = Note.delay + "s";
+    };
+    Object.defineProperty(Note.prototype, "task", {
+        get: function () {
+            this.build();
+            return this.container;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Note.createArrayOfTasks = function () {
+        var e_2, _a;
+        var tasks = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            tasks[_i] = arguments[_i];
+        }
+        var fragment = document.createDocumentFragment();
+        try {
+            for (var tasks_1 = __values(tasks), tasks_1_1 = tasks_1.next(); !tasks_1_1.done; tasks_1_1 = tasks_1.next()) {
+                var task = tasks_1_1.value;
+                fragment.appendChild(new Note(task).task);
+                this.delay += 0.25;
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (tasks_1_1 && !tasks_1_1.done && (_a = tasks_1.return)) _a.call(tasks_1);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        this.delay = 0;
+        return fragment;
+    };
+    Note.delay = 0;
+    return Note;
+}());
 var Task = (function () {
     function Task(task) {
         Task.tasks.push(task);
