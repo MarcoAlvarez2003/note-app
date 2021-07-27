@@ -33,19 +33,6 @@ var main = function () {
     Interface.taskActivator.addEventListener("click", function () {
         Form.show();
     });
-    TaskDesk.remove.addEventListener("click", function () {
-        var _a;
-        var key = TaskDesk.name.dataset.key;
-        (_a = document.getElementById(key)) === null || _a === void 0 ? void 0 : _a.remove();
-        TaskDesk.close.click();
-        Task.remove(key);
-    });
-    TaskDesk.close.addEventListener("click", function () {
-        TaskDesk.modal.classList.add("hide");
-        TaskDesk.name.textContent = "";
-        TaskDesk.name.dataset.key = "";
-        TaskDesk.description.textContent = "";
-    });
     Task.onCreate = function (task) {
         Interface.taskContainer.appendChild(new Note(task).task);
     };
@@ -318,10 +305,7 @@ var Note = (function () {
         this.setContainerStyles();
     };
     Note.prototype.show = function (self) {
-        TaskDesk.modal.classList.remove("hide");
-        TaskDesk.name.dataset.key = self.id;
-        TaskDesk.name.textContent = self.name;
-        TaskDesk.description.innerHTML = self.content;
+        Desk.Operations.assingTaskToDisplay = self;
     };
     Note.prototype.setContainerStyles = function () {
         this.container.classList.add("block", "block--container");
@@ -362,31 +346,58 @@ var Note = (function () {
     Note.delay = 0;
     return Note;
 }());
-var TaskDesk;
-(function (TaskDesk) {
-    TaskDesk.modal = document.getElementById("modal");
-    TaskDesk.name = document.getElementById("task-desk-title");
-    TaskDesk.description = document.getElementById("task-desk-content");
-    TaskDesk.remove = document.getElementById("remove");
-    TaskDesk.close = document.getElementById("close-modal");
-    TaskDesk.description.addEventListener("dblclick", function () {
-        TaskDesk.description.contentEditable = "true";
-    });
-    TaskDesk.close.addEventListener("click", function () {
-        var _a;
-        TaskDesk.description.focus();
-        var id = (_a = TaskDesk.name.textContent) === null || _a === void 0 ? void 0 : _a.trim();
-        var index = Task.findIndex(id);
-        Task.tasks[index].content = TaskDesk.description.innerHTML;
-        modifyContent(TaskDesk.name.dataset.key, TaskDesk.description.innerHTML);
-        TaskDesk.description.contentEditable = "false";
+var Desk;
+(function (Desk) {
+    var __modal = document.getElementById("modal");
+    var __title = document.getElementById("desk-title");
+    var __content = document.getElementById("desk-content");
+    var __remove = document.getElementById("remove-desk");
+    var __close = document.getElementById("close-desk");
+    var Operations = (function () {
+        function Operations() {
+        }
+        Object.defineProperty(Operations, "assingTaskToDisplay", {
+            set: function (task) {
+                __title.dataset.taskIdentifier = task.id;
+                __content.innerHTML = task.content;
+                __title.textContent = task.name;
+                show();
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Operations.removeDisplayedTask = function () {
+            Task.remove(getId());
+            hide();
+        };
+        return Operations;
+    }());
+    Desk.Operations = Operations;
+    var hide = function () { return __modal.classList.add("hide"); };
+    var show = function () { return __modal.classList.remove("hide"); };
+    var edit = function () { return (__content.contentEditable = "true"); };
+    var task = function (id) { return Task.tasks[Task.findIndex(id)]; };
+    var getId = function () { return __title.dataset.taskIdentifier; };
+    var modify = function () {
+        __content.focus();
+        var id = getId();
+        modifyTaskContent(id);
+        modifyNodeContent(id);
+        __content.contentEditable = "false";
         Task.save();
-    });
-    var modifyContent = function (id, content) {
-        var node = document.getElementById(id);
-        node.children[0].children[1].innerHTML = content;
+        hide();
     };
-})(TaskDesk || (TaskDesk = {}));
+    var modifyTaskContent = function (id) {
+        task(id).content = __content.innerHTML;
+    };
+    var modifyNodeContent = function (id) {
+        var element = document.getElementById(id);
+        element.children[0].children[1].innerHTML = __content.innerHTML;
+    };
+    __close.addEventListener("click", modify, false);
+    __content.addEventListener("dblclick", edit, false);
+    __remove.addEventListener("click", Operations.removeDisplayedTask, false);
+})(Desk || (Desk = {}));
 var Task = (function () {
     function Task(task) {
         Task.tasks.push(task);
@@ -416,14 +427,16 @@ var Task = (function () {
         node.classList.add(className);
         return node;
     };
-    Task.remove = function (name) {
-        this.tasks.splice(this.findIndex(name), 1);
+    Task.remove = function (id) {
+        var _a;
+        this.tasks.splice(this.findIndex(id), 1);
+        (_a = document.getElementById(id)) === null || _a === void 0 ? void 0 : _a.remove();
         this.save();
     };
     Task.findIndex = function (key) {
         return this.tasks.findIndex(function (_a) {
-            var name = _a.name;
-            return name === key;
+            var id = _a.id;
+            return id === key;
         });
     };
     Task.save = function () {

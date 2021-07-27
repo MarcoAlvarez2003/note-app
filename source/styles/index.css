@@ -1,4 +1,10 @@
+@font-face {
+    font-family: face;
+    src: url("../assets/archer.otf");
+}
+
 * {
+    font-family: archer, "Times New Roman", Times, serif;
     box-sizing: border-box;
     padding: 0;
     margin: 0;
@@ -232,8 +238,7 @@ body {
 
 .block--container {
     animation: Task 1s 1 forwards;
-    position: relative;
-    right: 100%;
+    opacity: 0%;
 }
 
 .hide {
@@ -244,10 +249,11 @@ body {
 
 @keyframes Task {
     0% {
-        right: 100%;
+        opacity: 0%;
     }
+
     100% {
-        right: 0%;
+        opacity: 100%;
     }
 }
 
@@ -271,13 +277,4 @@ body {
 
 .task-desk__paragraph::-webkit-scrollbar {
     display: none;
-}
-
-/* Media Queries */
-
-@media screen and (max-width: 600px) {
-    .app__body::-webkit-scrollbar,
-    .task-desk__paragraph::-webkit-scrollbar {
-        border-left: 0;
-    }
 }

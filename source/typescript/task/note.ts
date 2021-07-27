@@ -33,10 +33,7 @@ class Note {
      * @param self Parameter with the task information
      */
     protected show(self: Task) {
-        TaskDesk.modal.classList.remove("hide");
-        TaskDesk.name.dataset.key = self.id;
-        TaskDesk.name.textContent = self.name;
-        TaskDesk.description.innerHTML = self.content;
+        Desk.Operations.assignTaskToDisplay = self;
     }
     /**
      * assign the styles for the task
@@ -55,7 +52,7 @@ class Note {
     /**
      * insert all tasks into a snippet to insert
      * @param tasks matrix with tasks
-     * @returns returns a fragment with all insertables
+     * @returns returns a fragment with all inscrutable
      */
     public static createArrayOfTasks(...tasks: Task[]): DocumentFragment {
         const fragment = document.createDocumentFragment();

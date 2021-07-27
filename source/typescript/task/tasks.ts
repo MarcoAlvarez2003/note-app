@@ -56,13 +56,14 @@ class Task {
         return node;
     }
 
-    public static remove(name: string) {
-        this.tasks.splice(this.findIndex(name), 1);
+    public static remove(id: string) {
+        this.tasks.splice(this.findIndex(id), 1);
+        document.getElementById(id)?.remove();
         this.save();
     }
 
     public static findIndex(key: string): number {
-        return this.tasks.findIndex(({ name }) => name === key);
+        return this.tasks.findIndex(({ id }) => id === key);
     }
 
     public static save(): void {
