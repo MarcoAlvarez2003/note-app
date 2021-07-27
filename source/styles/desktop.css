@@ -21,7 +21,7 @@
     height: 75%;
 }
 
-@media screen and (max-width: 1051px) {
+@media screen and (max-width: 951px) {
     .app__body::-webkit-scrollbar,
     .task-desk__paragraph::-webkit-scrollbar {
         border-left: 0;
