@@ -15,6 +15,9 @@
 
 .task__head {
     height: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .task__body {
