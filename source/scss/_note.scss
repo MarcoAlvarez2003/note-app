@@ -1,0 +1,54 @@
+.app {
+    .note {
+        overflow: hidden;
+        border-radius: 10px;
+
+        & > .head {
+            padding: 5px;
+            text-align: center;
+        }
+
+        & > .body {
+            padding: 20px;
+            font-size: small;
+            letter-spacing: 1;
+            text-align: center;
+            word-wrap: break-word;
+        }
+    }
+}
+.app--dark {
+    .note {
+        border: 2px solid #fff;
+        box-shadow: 0px 0px 10px rgb(185, 185, 185);
+
+        & > .head {
+            color: #fff;
+            background-color: #111;
+            border-bottom: 2px solid rgb(185, 185, 185);
+        }
+
+        & > .body {
+            color: #fffd;
+            background: #1a1a1a;
+        }
+    }
+}
+
+.app--light {
+    .note {
+        border: 2px solid #000;
+        box-shadow: 0px 0px 10px rgb(20, 20, 20);
+
+        & > .head {
+            color: #000;
+            background-color: #fff;
+            border-bottom: 2px solid rgb(20, 20, 20);
+        }
+
+        & > .body {
+            color: #000d;
+            background: #f1f1f1;
+        }
+    }
+}

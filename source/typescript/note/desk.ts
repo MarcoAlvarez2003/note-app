@@ -1,6 +1,3 @@
-/**
- * Dedicated space for handling task samples
- */
 namespace Desk {
     const __modal = document.getElementById("modal") as HTMLDivElement;
     const __title = document.getElementById("desk-title") as HTMLDivElement;
@@ -8,24 +5,16 @@ namespace Desk {
     const __remove = document.getElementById("remove-desk") as HTMLButtonElement;
     const __close = document.getElementById("close-desk") as HTMLButtonElement;
 
-    /**
-     * This class allows you to interact with the counter
-     */
     export class Operations {
-        /**
-         * Assign a task to display
-         */
         static set assignTaskToDisplay(task: Task) {
             __title.dataset.taskIdentifier = task.id;
             __content.innerHTML = task.content;
             __title.textContent = task.name;
             show();
         }
-        /**
-         * remove current task on the counter
-         */
-        static removeDisplayedTask(): void {
-            Task.remove(getId());
+        static async removeDisplayedTask() {
+            (await Archive.open()).delete(getId());
+            document.getElementById(getId())?.remove();
             hide();
         }
     }
@@ -33,21 +22,35 @@ namespace Desk {
     const hide = () => __modal.classList.add("hide");
     const show = () => __modal.classList.remove("hide");
     const edit = () => (__content.contentEditable = "true");
-    const task = (id: string) => Task.tasks[Task.findIndex(id)];
     const getId = () => __title.dataset.taskIdentifier as string;
 
-    const modify = () => {
+    const modify = async () => {
         __content.focus();
         const id = getId();
-        modifyTaskContent(id);
         modifyNodeContent(id);
+        await modifyTaskContent(id);
         __content.contentEditable = "false";
-        Task.save();
+        await save(id);
         hide();
     };
 
-    const modifyTaskContent = (id: string) => {
-        task(id).content = __content.innerHTML;
+    async function save(id: string) {
+        const store = await Archive.open();
+        console.log(id, store);
+    }
+
+    const modifyTaskContent = async (id: string) => {
+        (await Archive.open()).openCursor().addEventListener("success", async function () {
+            const cursor = this.result;
+            if (cursor) {
+                const data = cursor.value as Task;
+                if (data.id === id) {
+                    data.content = __content.innerHTML;
+                    return (await Archive.open()).put(data);
+                }
+                cursor.continue();
+            }
+        });
     };
 
     const modifyNodeContent = (id: string) => {

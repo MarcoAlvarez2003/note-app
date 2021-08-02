@@ -1,0 +1,10 @@
+extends ../widget
+
+block title
+    span.translatable(data-key="formWidgetRequiredData") Required Data
+
+block content
+    .block 
+        input#form-name.input.translatable(type="text" spellcheck="off" autocomplete="off" data-key="formNamePlace")
+    .block
+        textarea#form-content.area.translatable(spellcheck="off" data-key="formDescriptionPlace")

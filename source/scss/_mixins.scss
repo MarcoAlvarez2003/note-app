@@ -1,0 +1,25 @@
+@mixin flex($direction, $position) {
+    display: flex;
+    align-items: center;
+    flex-direction: $direction;
+    justify-content: $position;
+}
+
+@mixin scrollbar($border, $thumb, $scroll) {
+    &::-webkit-scrollbar-corner {
+        background: $thumb;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $thumb;
+    }
+    &::-webkit-scrollbar {
+        border-left: 2px solid $border;
+        background: $scroll;
+    }
+}
+
+@mixin noScrollBar {
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}

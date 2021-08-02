@@ -1,0 +1,72 @@
+.app {
+    height: 100%;
+    color: #fff;
+    overflow: hidden;
+
+    & > .head {
+        height: 5%;
+        padding: 10px;
+        @include flex(row, space-around);
+
+        & > .button {
+            outline: 0;
+            padding: 5px 20px;
+        }
+    }
+
+    & > .body {
+        height: 95%;
+        padding: 5px;
+        overflow-y: scroll;
+    }
+}
+
+.app--dark {
+    background: linear-gradient(to right, #121415, #303234);
+
+    & > .head {
+        color: #fff;
+        border-bottom: 2px solid #fff;
+
+        & > .button {
+            color: #fff;
+            background: #000;
+            border: 1px solid #fff;
+
+            &:active {
+                color: #fff;
+                background: #000;
+            }
+        }
+    }
+
+    & > .body {
+        background: #0001;
+        @include scrollbar(#fff, #111, #1b1b1b);
+    }
+}
+
+.app--light {
+    background: linear-gradient(to right, #fff, #aaa);
+
+    & > .head {
+        color: #000;
+        background: #fff;
+        border-bottom: 2px solid #000;
+
+        & > .button {
+            background: #fff;
+            border: 1px solid #000;
+
+            &:active {
+                color: #fff;
+                background: #000;
+            }
+        }
+    }
+
+    & > .body {
+        background: #fff1;
+        @include scrollbar(#000, #aaa, #f1f1f1);
+    }
+}

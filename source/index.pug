@@ -1,0 +1,12 @@
+doctype 
+
+html 
+    head
+        include views/head
+    body
+        div.app.app--dark.hide#app
+            include views/app/head
+            include views/app/body
+            include views/form/form
+            include views/desk
+        script(src="source/build/bundle.js")

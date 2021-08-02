@@ -1,7 +1,7 @@
 namespace Form {
-    type SubmitFunction = (task: Task) => void;
+    type SubmitFunction = (task: Task) => Promise<void>;
 
-    export let onsubmit: SubmitFunction = (task: Task) => {};
+    export let onsubmit: SubmitFunction = async (task: Task) => {};
     const form = document.getElementById("form") as HTMLFormElement;
     const modal = document.getElementById("form-modal") as HTMLDivElement;
     const borderColorInput = document.getElementById("form-color") as HTMLInputElement;
@@ -77,13 +77,15 @@ namespace Form {
     export const reset = () => form.reset();
     export const close = () => (hide(), reset());
 
-    form.addEventListener("click", (e) => {
+    const isValid = ({ name, content }: Task) => name && content;
+
+    form.addEventListener("click", async (e) => {
         e.preventDefault();
         const action = (e.target as HTMLElement).dataset.action;
 
         action === "create"
-            ? FormValidator.isValid(Data.task)
-                ? onsubmit(Data.task)
+            ? isValid(Data.task)
+                ? await onsubmit(Data.task)
                 : invalid()
             : action === "close"
             ? close()

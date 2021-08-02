@@ -1,0 +1,9 @@
+extends ../widget
+
+block title
+    span.translatable(data-key="formWidgetColorData") Color Data
+    
+block content
+    .block.flex
+        input#form-color.input.translatable(type="text" spellcheck="off" data-key="formBorderColorPlace")
+        input#form-text-color.input.translatable.left(type="text" spellcheck="off" data-key="formTextColorPlace")

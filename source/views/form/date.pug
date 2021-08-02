@@ -1,0 +1,10 @@
+extends ../widget
+
+block title
+    span.translatable(data-key="formWidgetDateData") Date Data
+    
+block content 
+    .block.flex
+        input#form-year.input.right.translatable(type="text" data-key="formYearPlace")
+        input#form-month.input.right.translatable(type="text" data-key="formMonthPlace")
+        input#form-day.input.right.translatable(type="text" data-key="formDayPlace")

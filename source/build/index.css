@@ -1,0 +1,671 @@
+@font-face {
+  font-family: archer;
+  src: url("../assets/archer.otf");
+}
+
+* {
+  font-family: archer, "Times New Roman", Times, serif;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.hide {
+  display: none;
+}
+
+.block {
+  width: 100%;
+  padding: 10px;
+}
+
+.flex {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+
+.animated-block {
+  -webkit-animation: Note 1s 1 forwards;
+          animation: Note 1s 1 forwards;
+  opacity: 0%;
+}
+
+@-webkit-keyframes Note {
+  from {
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
+  }
+}
+
+@keyframes Note {
+  from {
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
+  }
+}
+
+.app .widget {
+  width: 100%;
+  max-width: 600px;
+}
+
+.app .widget .head {
+  padding: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.app .widget .head .title {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.app .widget .body {
+  display: none;
+}
+
+.app--dark .widget .head .title {
+  color: #fff;
+  text-align: center;
+  background: #fff2;
+}
+
+.app--light .widget .head .title {
+  color: #000;
+  text-align: center;
+  background: #0002;
+}
+
+.app .modal {
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.app .hide {
+  display: none;
+}
+
+.app--dark .modal {
+  background: #000c;
+}
+
+.app--light .modal {
+  background: #fffc;
+}
+
+.app .form {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  overflow-y: scroll;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.app .form::-webkit-scrollbar {
+  display: none;
+}
+
+.app .form .block {
+  width: 100%;
+  padding: 5px;
+  max-width: 600px;
+}
+
+.app .form .left {
+  margin-left: 5px;
+}
+
+.app .form .right {
+  margin-right: 5px;
+}
+
+.app .form .input,
+.app .form .area {
+  width: 100%;
+  padding: 10px;
+}
+
+.app .form .area {
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 100px;
+  max-height: 200px;
+}
+
+.app .form .button {
+  width: 48%;
+  height: 90%;
+  padding: 20px;
+  border-radius: 10px;
+  outline: 0 solid transparent;
+}
+
+.app .form .img {
+  width: 22%;
+  max-width: 133.33333px;
+}
+
+.app .form .img:hover {
+  -webkit-transform: scale(0.9);
+          transform: scale(0.9);
+}
+
+.app--dark .form {
+  background: -webkit-gradient(linear, left top, right top, from(#0f202777), color-stop(#203a4377), to(#2c536477));
+  background: linear-gradient(to right, #0f202777, #203a4377, #2c536477);
+}
+
+.app--dark .form .input,
+.app--dark .form .area {
+  border: 0;
+  color: #bbb;
+  border-radius: 5px;
+  outline: 0 solid transparent;
+  border-bottom: 2px solid #bbb;
+  background: -webkit-gradient(linear, left top, right top, from(#23252655), to(#41434555));
+  background: linear-gradient(to right, #23252655, #41434555);
+}
+
+.app--dark .form .button {
+  border: 0;
+  color: #fff;
+  background: -webkit-gradient(linear, left top, right top, from(#23252655), to(#41434555));
+  background: linear-gradient(to right, #23252655, #41434555);
+}
+
+.app--dark .form .button:active {
+  color: #000;
+  background: #fff;
+}
+
+.app--light .form {
+  background: -webkit-gradient(linear, left top, right top, from(#aaaa), color-stop(#999a), to(#aaaa));
+  background: linear-gradient(to right, #aaaa, #999a, #aaaa);
+}
+
+.app--light .form .input,
+.app--light .form .area {
+  border: 0;
+  color: #000;
+  border-radius: 5px;
+  outline: 0 solid transparent;
+  border-bottom: 2px solid #111;
+  background: -webkit-gradient(linear, left top, right top, from(#aaa), color-stop(#ccc), to(#aaa));
+  background: linear-gradient(to right, #aaa, #ccc, #aaa);
+}
+
+.app--light .form .button {
+  border: 0;
+  color: #000;
+  background: -webkit-gradient(linear, left top, right top, from(#aaa), to(#999));
+  background: linear-gradient(to right, #aaa, #999);
+}
+
+.app--light .form .button:active {
+  color: #fff;
+  background: #000;
+}
+
+.app--light .form .img {
+  -webkit-filter: invert(0%);
+          filter: invert(0%);
+}
+
+.app--light .form .img:active {
+  background: #fff;
+  -webkit-filter: invert(100%);
+          filter: invert(100%);
+}
+
+.app .desk {
+  width: 100%;
+  height: 100%;
+  max-width: 600px;
+}
+
+.app .desk .head {
+  height: 5%;
+  font-weight: bold;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.app .desk .body {
+  height: 85%;
+  padding: 10px 20px;
+}
+
+.app .desk .body .paragraph {
+  width: 100%;
+  height: 100%;
+  font-size: large;
+  -webkit-user-select: text;
+     -moz-user-select: text;
+      -ms-user-select: text;
+          user-select: text;
+  text-align: center;
+  overflow-y: scroll;
+}
+
+.app .desk .body .paragraph::-webkit-scrollbar {
+  display: none;
+}
+
+.app .desk .controls {
+  height: 10%;
+  padding: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.app .desk .controls .button {
+  width: 48%;
+  height: 90%;
+  padding: 20px;
+  border-radius: 10px;
+  outline: 0 solid transparent;
+}
+
+.app--dark .desk {
+  color: #fff;
+  background-color: #1b1b1b;
+}
+
+.app--dark .desk .head {
+  background-color: #101010;
+  border-bottom: 2px solid #fff;
+}
+
+.app--dark .desk .body {
+  color: #fff;
+  background: -webkit-gradient(linear, left top, right top, from(#121415), to(#303234));
+  background: linear-gradient(to right, #121415, #303234);
+}
+
+.app--dark .desk .controls {
+  color: #fff;
+  background-color: #101010;
+  border-top: 2px solid #fff;
+}
+
+.app--dark .desk .controls .button {
+  border: 0;
+  color: #fff;
+  background: -webkit-gradient(linear, left top, right top, from(#23252655), to(#41434555));
+  background: linear-gradient(to right, #23252655, #41434555);
+}
+
+.app--dark .desk .controls .button:active {
+  color: #000;
+  background: #fff;
+}
+
+.app--light .desk {
+  color: #000;
+  background-color: #b0b0b0;
+}
+
+.app--light .desk .head {
+  color: #000;
+  border-bottom: 2px solid #000;
+  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#bbb));
+  background: linear-gradient(#fff, #bbb);
+}
+
+.app--light .desk .body {
+  color: #000;
+  background: -webkit-gradient(linear, left top, right top, from(#a2a4a5), to(#b0b2b4));
+  background: linear-gradient(to right, #a2a4a5, #b0b2b4);
+}
+
+.app--light .desk .controls {
+  color: #000;
+  background-color: #bbb;
+  border-top: 2px solid #000;
+}
+
+.app--light .desk .controls .button {
+  border: 0;
+  color: #000;
+  background: -webkit-gradient(linear, left top, right top, from(#aaa), to(#999));
+  background: linear-gradient(to right, #aaa, #999);
+}
+
+.app--light .desk .controls .button:active {
+  color: #fff;
+  background: #000;
+}
+
+.app .box {
+  height: 100%;
+  padding: 5px;
+  border-radius: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.app .box .logo {
+  font-size: 50px;
+}
+
+.app--dark .box {
+  color: #fff;
+  background: #000;
+  border: 2px solid #fff;
+  -webkit-box-shadow: 0px 0px 10px #b9b9b9;
+          box-shadow: 0px 0px 10px #b9b9b9;
+}
+
+.app--dark .box:active {
+  color: #000;
+  background: #fff;
+}
+
+.app--light .box {
+  color: #000;
+  background: #fff;
+  border: 2px solid #000;
+  -webkit-box-shadow: 0px 0px 10px #141414;
+          box-shadow: 0px 0px 10px #141414;
+}
+
+.app--light .box:active {
+  color: #fff;
+  background: #000;
+}
+
+.app .note {
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.app .note > .head {
+  padding: 5px;
+  text-align: center;
+}
+
+.app .note > .body {
+  padding: 20px;
+  font-size: small;
+  letter-spacing: 1;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.app--dark .note {
+  border: 2px solid #fff;
+  -webkit-box-shadow: 0px 0px 10px #b9b9b9;
+          box-shadow: 0px 0px 10px #b9b9b9;
+}
+
+.app--dark .note > .head {
+  color: #fff;
+  background-color: #111;
+  border-bottom: 2px solid #b9b9b9;
+}
+
+.app--dark .note > .body {
+  color: #fffd;
+  background: #1a1a1a;
+}
+
+.app--light .note {
+  border: 2px solid #000;
+  -webkit-box-shadow: 0px 0px 10px #141414;
+          box-shadow: 0px 0px 10px #141414;
+}
+
+.app--light .note > .head {
+  color: #000;
+  background-color: #fff;
+  border-bottom: 2px solid #141414;
+}
+
+.app--light .note > .body {
+  color: #000d;
+  background: #f1f1f1;
+}
+
+.app {
+  height: 100%;
+  color: #fff;
+  overflow: hidden;
+}
+
+.app > .head {
+  height: 5%;
+  padding: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.app > .head > .button {
+  outline: 0;
+  padding: 5px 20px;
+}
+
+.app > .body {
+  height: 95%;
+  padding: 5px;
+  overflow-y: scroll;
+}
+
+.app--dark {
+  background: -webkit-gradient(linear, left top, right top, from(#121415), to(#303234));
+  background: linear-gradient(to right, #121415, #303234);
+}
+
+.app--dark > .head {
+  color: #fff;
+  border-bottom: 2px solid #fff;
+}
+
+.app--dark > .head > .button {
+  color: #fff;
+  background: #000;
+  border: 1px solid #fff;
+}
+
+.app--dark > .head > .button:active {
+  color: #fff;
+  background: #000;
+}
+
+.app--dark > .body {
+  background: #0001;
+}
+
+.app--dark > .body::-webkit-scrollbar-corner {
+  background: #111;
+}
+
+.app--dark > .body::-webkit-scrollbar-thumb {
+  background: #111;
+}
+
+.app--dark > .body::-webkit-scrollbar {
+  border-left: 2px solid #fff;
+  background: #1b1b1b;
+}
+
+.app--light {
+  background: -webkit-gradient(linear, left top, right top, from(#fff), to(#aaa));
+  background: linear-gradient(to right, #fff, #aaa);
+}
+
+.app--light > .head {
+  color: #000;
+  background: #fff;
+  border-bottom: 2px solid #000;
+}
+
+.app--light > .head > .button {
+  background: #fff;
+  border: 1px solid #000;
+}
+
+.app--light > .head > .button:active {
+  color: #fff;
+  background: #000;
+}
+
+.app--light > .body {
+  background: #fff1;
+}
+
+.app--light > .body::-webkit-scrollbar-corner {
+  background: #aaa;
+}
+
+.app--light > .body::-webkit-scrollbar-thumb {
+  background: #aaa;
+}
+
+.app--light > .body::-webkit-scrollbar {
+  border-left: 2px solid #000;
+  background: #f1f1f1;
+}
+
+@media screen and (min-width: 1300px) {
+  .app > .body {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-rows: (minmax(20%, 1fr))[auto-fill];
+        grid-template-rows: repeat(auto-fill, minmax(20%, 1fr));
+    -ms-grid-columns: (minmax(10%, 1fr))[auto-fill];
+        grid-template-columns: repeat(auto-fill, minmax(10%, 1fr));
+  }
+  .app .note {
+    width: 100%;
+    height: 100%;
+  }
+  .app .note .head {
+    height: 25%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+  .app .note .body {
+    height: 75%;
+  }
+}
+/*# sourceMappingURL=index.css.map */

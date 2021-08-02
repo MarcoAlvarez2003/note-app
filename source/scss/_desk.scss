@@ -1,0 +1,114 @@
+.app {
+    .desk {
+        width: 100%;
+        height: 100%;
+        max-width: 600px;
+
+        .head {
+            height: 5%;
+            font-weight: bold;
+            @include flex(row, center);
+        }
+
+        .body {
+            height: 85%;
+            padding: 10px 20px;
+
+            .paragraph {
+                width: 100%;
+                height: 100%;
+                font-size: large;
+                user-select: text;
+                text-align: center;
+                overflow-y: scroll;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+            }
+        }
+
+        .controls {
+            height: 10%;
+            padding: 5px;
+            @include flex(row, center);
+
+            .button {
+                width: 48%;
+                height: 90%;
+                padding: 20px;
+                border-radius: 10px;
+                outline: 0 solid transparent;
+            }
+        }
+    }
+}
+
+.app--dark {
+    .desk {
+        color: #fff;
+        background-color: #1b1b1b;
+
+        .head {
+            background-color: #101010;
+            border-bottom: 2px solid #fff;
+        }
+
+        .body {
+            color: #fff;
+            background: linear-gradient(to right, #121415, #303234);
+        }
+
+        .controls {
+            color: #fff;
+            background-color: #101010;
+            border-top: 2px solid #fff;
+
+            .button {
+                border: 0;
+                color: #fff;
+                background: linear-gradient(to right, #23252655, #41434555);
+
+                &:active {
+                    color: #000;
+                    background: #fff;
+                }
+            }
+        }
+    }
+}
+
+.app--light {
+    .desk {
+        color: #000;
+        background-color: #b0b0b0;
+
+        .head {
+            color: #000;
+            border-bottom: 2px solid #000;
+            background: linear-gradient(#fff, #bbb);
+        }
+
+        .body {
+            color: #000;
+            background: linear-gradient(to right, #a2a4a5, #b0b2b4);
+        }
+
+        .controls {
+            color: #000;
+            background-color: #bbb;
+            border-top: 2px solid #000;
+
+            .button {
+                border: 0;
+                color: #000;
+                background: linear-gradient(to right, #aaa, #999);
+
+                &:active {
+                    color: #fff;
+                    background: #000;
+                }
+            }
+        }
+    }
+}
