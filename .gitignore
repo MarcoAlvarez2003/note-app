@@ -1,3 +1,5 @@
 todo.md
 .vscode
 tsconfig.json
+source/build/bundle.js.map
+source/build/index.css.map
