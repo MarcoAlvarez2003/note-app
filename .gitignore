@@ -3,3 +3,4 @@ tsconfig.json
 source/build/bundle.js.map
 source/build/index.css.map
 .vscode
+node_modules
